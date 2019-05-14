@@ -1,5 +1,6 @@
 #include"Movie.h"
 #include"BadRequest.h"
+#include"Comment.h"
 
 Movie::Movie(InputVec input_vector , int id) {
 	set_map_keys();
@@ -7,6 +8,7 @@ Movie::Movie(InputVec input_vector , int id) {
 	deleted_by_publisher = false;
 	price = std::stof(movie_information["price"]);
 	film_id = id;
+	rate = 0;
 
 }
 
@@ -56,4 +58,25 @@ void Movie::edit_movie_information(InputVec input_vector) {
 
 void Movie::delete_movie() {
 	deleted_by_publisher = true;
+}
+
+void Movie::score_movie(float score) {
+	scores.push_back(score);
+	calculate_average_rate();
+}
+
+void Movie::submit_comment(std::string content) {
+	Comment* comment = new Comment(comments.size(), content);
+	comments.push_back(comment);
+}
+
+bool Movie::delete_comment(int id) {
+	for (int i = 0; i < comments.size(); i++) {
+		if (comments[i]->get_id() == id) {
+			comments[i]->delete_comment();
+		}
+		else
+			return false;
+	}
+	return true;
 }

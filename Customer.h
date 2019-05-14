@@ -5,6 +5,8 @@
 #include<vector>
 #include<iostream>
 #include<algorithm>
+#include<regex>
+#include<functional>
 
 #define PUBLISHER true;
 #define NORMAL_CUSTOMER false;
@@ -33,6 +35,10 @@ public:
 	void follow_publisher(Publisher* publisher);
 	void increase_money(float _money);
 	bool score_movie(int id, float rate);
+	bool check_signup_command_validity(InputVec input_vector);
+	bool check_email_validity(std::string email);
+	std::string hash_password(std::string password);
+	void comment_on_a_movie(int film_id, std::string content);
 
 protected:
 	InformationMAP user_information;

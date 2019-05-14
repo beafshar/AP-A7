@@ -5,6 +5,7 @@
 #include<vector>
 #include<exception>
 #include"BadRequest.h"
+#include<sstream>
 
 class Controller;
 

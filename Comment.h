@@ -5,8 +5,12 @@
 
 class Comment {
 public:
+	Comment(int id, std::string _content);
+	int get_id();
+	void delete_comment();
 
 private:
+	int user;
 	std::string content;
 	int comment_id;
 	bool comment_deleted;

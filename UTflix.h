@@ -7,10 +7,11 @@
 #include<iostream>
 #include<string>
 #include"command_handler.h"
+#include<map>
 
 class Customer;
 
-typedef std::vector<Customer*> CustomersVector;
+typedef std::map<int,Customer*> CustomersMap;
 
 class UTflix {
 public:
@@ -18,7 +19,7 @@ public:
 	void run();
 
 private:
-	CustomersVector UTflix_users;
+	CustomersMap UTflix_users;
 	Customer* active_user;
 
 };

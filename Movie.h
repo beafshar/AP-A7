@@ -22,6 +22,9 @@ public:
 	int get_film_id();
 	void edit_movie_information(InputVec input_vector);
 	void delete_movie();
+	void score_movie(float score);
+	void submit_comment(std::string content);
+	bool delete_comment(int id);
 private:
 	InformationMAP movie_information;
 	int film_id;
@@ -29,7 +32,7 @@ private:
 	bool deleted_by_publisher;
 	std::vector<int> scores;
 	float rate;
-	CommentsVector commnets;
+	CommentsVector comments;
 
 };
 #endif 

@@ -5,21 +5,11 @@ CommandHandler::CommandHandler() {
 	
 }
 
-//in irad dare
-
 void CommandHandler::parse_input(std::string line) {
-	int lenght = 0;
-	for (int i = 0; i < line.size(); i++) {
-		if (line[i] == ' ' && lenght != 0) {
-			std::string temp = line.substr(i-lenght, i-1);
-			input_line.push_back(temp);
-			lenght = 0;
-			continue;
-		}
-		lenght++;
-		
-		
-	}
+	std::istringstream is(line);
+	std::string word;
+	while (is >> word)
+		input_line.push_back(word);
 }
 
 void CommandHandler::detect_command_type(std::vector<std::string> line) {
