@@ -5,7 +5,7 @@
 #include<string>
 #include"BadRequest.h"
 
-
+class UTflix;
 
 class Controller {
 public:
@@ -19,5 +19,6 @@ public:
 
 private:
 	std::vector<std::string> input_line;
+	UTflix* UT_flix;
 };
 #endif 

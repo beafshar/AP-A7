@@ -14,3 +14,7 @@ void User::print_information() {
 int User::get_id() {
 	return user_id;
 }
+
+std::string User::get_username() {
+	return username;
+}

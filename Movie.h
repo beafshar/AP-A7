@@ -2,6 +2,7 @@
 #define MOVIE_H
 
 #include<map>
+#include<iostream>
 #include<vector>
 #include<string>
 
@@ -25,6 +26,10 @@ public:
 	void score_movie(float score);
 	void submit_comment(std::string content);
 	bool delete_comment(int id);
+	bool reply_comment(int id, std::string content);
+	std::string get_movie_name();
+	void view_details();
+	void print_comments_and_replies();
 private:
 	InformationMAP movie_information;
 	int film_id;

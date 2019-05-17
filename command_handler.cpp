@@ -26,3 +26,11 @@ void CommandHandler::detect_command_type(std::vector<std::string> line) {
 	else
 		throw BadRequest();
 }
+
+
+void CommandHandler::run() {
+	std::string line;
+	while (std::getline(std::cin, line)) {
+		parse_input(line);
+	}
+}

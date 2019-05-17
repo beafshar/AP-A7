@@ -58,13 +58,14 @@ void Publisher::add_followers(User* user) {
 void Publisher::view_published_movies(InputVec input_vector) {
 
 }
-////
+
 bool Publisher::reply_comments(int film_id, int comment_id, std::string content) {
 	for (int i = 0; i < published_movies.size(); i++) {
-		//if(published_movies[i]->get_film_id() == film_id)
-			//published_movies[i]->
+		if (published_movies[i]->get_film_id() == film_id)
+			if (published_movies[i]->reply_comment(comment_id, content))
+				return true;
 	}
-	return true;
+	return false;
 }
 
 bool Publisher::delete_comment(int film_id, int comment_id) {

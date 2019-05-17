@@ -3,6 +3,7 @@
 #include"User.h"
 #include"Publisher.h"
 #include"Movie.h"
+#include"Message.h"
 
 Customer::Customer(int id) {
 	set_map_keys();
@@ -65,10 +66,21 @@ void Customer::set_user_type() {
 
 void Customer::follow_publisher(Publisher* publisher) {
 	followings.push_back(publisher);
-	//notify publisher
 	User* user = new User(user_id, user_information["username"], user_information["email"]);
 	publisher->add_followers(user);
+	/*
+	Message* msg = new Message("");
+	msg->create_follow_notif(user->get_username(), user->get_id());
+	*/
 
+}
+
+void Customer::view_movie_details(int film_id) {
+	for (int i = 0; i < bought_movies.size(); i++) {
+		if (bought_movies[i]->get_film_id() == film_id)
+			bought_movies[i]->view_details();
+	}
+	//print recommendations
 }
 
 void Customer::increase_money(float _money) {
@@ -79,6 +91,9 @@ bool Customer::score_movie(int id, float rate) {
 	for (int i = 0; i < bought_movies.size(); i++) {
 		if (bought_movies[i]->get_film_id() == id) {
 			bought_movies[i]->score_movie(rate);
+			//ssage* msg = new Message("");
+			//g->create_rate_film_notif(user_information["username"],user_id,bought_movies[i]->g
+			//tify_user(msg);
 		}
 		else
 			throw BadRequest();
@@ -92,15 +107,12 @@ bool Customer::check_signup_command_validity(InputVec input_vec) {
 		if (input_vec[i] == "email")
 			if (check_email_validity(input_vec[i + 1]) == false)
 				return false;
-		
-
 	}
 }
 //kar mikone regex?
 bool Customer::check_email_validity(std::string email) {
 	const std::regex pattern
 		("(\\w+)(\\.|_)?(\\w*)@(\\w+)(\\.(\\w+))+");
-
 	return std::regex_match(email, pattern);
 }
 
@@ -118,4 +130,32 @@ void Customer::comment_on_a_movie(int film_id, std::string content) {
 		else
 			throw BadRequest();
 	}
+}
+
+void Customer::get_unread_notifications() {
+	std::cout << "#. Notification Message " << std::endl;
+	for (int i = notification.size() - 1; i > -1;i--){
+		if (notification[i]->if_read() == false) {
+			notification[i]->read_message();
+			std::cout << i + 1 << ". " << notification[i]->get_content();
+			std::cout << std::endl;
+		}
+	}
+}
+
+void Customer::get_all_notification(int limit) {
+	std::cout << "#. Notification Message " << std::endl;
+	for (int i = notification.size(); limit != 0; i--) {
+		std::cout << i + 1 << ". " << notification[i]->get_content();
+		std::cout << std::endl;
+		limit--;
+	}
+}
+
+void Customer::notify_user(Message* message) {
+	notification.push_back(message);
+}
+
+void Customer::notify_reply(std::string publisher_name, int id) {
+
 }

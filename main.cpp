@@ -1,12 +1,8 @@
-#include"UTflix.h"
-
-#include<sstream>
-
+#include"command_handler.h"
 
 
 int main() {
-
-	UTflix Utflix = UTflix();
-	Utflix.run();
+	CommandHandler command_handler = CommandHandler();
+	command_handler.run();
 	return 0;
 }

@@ -1,7 +1,9 @@
 #include"Controller.h"
+#include"UTflix.h"
 
 Controller::Controller(std::vector<std::string> line) {
 	input_line = line;
+	UT_flix = new UTflix();
 }
 
 void Controller::detect_DELETE_command() {

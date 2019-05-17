@@ -17,6 +17,13 @@ public:
 	void view_published_movies(InputVec input_vector);
 	bool reply_comments(int film_id, int comment_id, std::string content);
 	bool delete_comment(int film_id, int comment_id);
+	void notify_follow(std::string user_name, int id);
+	void notify_rate_film(std::string user_name, int user_id,
+		std::string film, int film_id);
+	void notify_comment(std::string user_name, int user_id,
+		std::string film, int film_id);
+	void notify_buy_film(std::string user_name, int user_id,
+		std::string film, int film_id);
 
 private:
 	UsersVector followers;

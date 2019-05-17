@@ -1,11 +1,10 @@
 #include"Comment.h"
 
-Comment::Comment(int id, std::string _content) {
+Comment::Comment(int id, std::string _content) : Message(_content, false){
 	comment_id = id;
-	content = _content;
 	comment_deleted = false;
 	get_replied_by_publisher = false;
-	seen = false;
+
 }
 
 int Comment::get_id() {
@@ -16,3 +15,13 @@ void Comment::delete_comment() {
 	comment_deleted = true;
 }
 
+void Comment::reply(std::string content) {
+	replies.push_back(content);
+}
+
+void Comment::print_replies() {
+	for (int i = 0; i < replies.size(); i++) {
+		std::cout << comment_id << "." << i + 1 << ". ";
+		std::cout << replies[i] << std::endl;
+	}
+}

@@ -80,3 +80,39 @@ bool Movie::delete_comment(int id) {
 	}
 	return true;
 }
+
+bool Movie::reply_comment(int id, std::string content) {
+	for (int i = 0; i < comments.size(); i++) {
+		if (comments[i]->get_id() == id) {
+			comments[i]->reply(content);
+			return true;
+		}
+	}
+	return false;
+}
+
+std::string Movie::get_movie_name() {;
+	return movie_information["name"];
+}
+
+void Movie::view_details() {
+	std::cout << "Details of Film " << movie_information["name"] << std::endl;
+	std::cout << "Id = " << film_id << std::endl;
+	std::cout << "Director = " << movie_information["director"] << std::endl;
+	std::cout << "Length = " << movie_information["lenght"] << std::endl;
+	std::cout << "Year = " << movie_information["year"] << std::endl;
+	std::cout << "Summary = " << movie_information["summary"] << std::endl;
+	std::cout << "Rate = " << rate << std::endl;
+	std::cout << "Price = " <<movie_information["price"]<< std::endl;
+	std::cout << std::endl << std::endl;
+	print_comments_and_replies();
+}
+
+void Movie::print_comments_and_replies() {
+	std::cout << "Comments" << std::endl;
+	for (int i = 0; i < comments.size(); i++) {
+		std::cout << comments[i]->get_id() << ". " << comments[i]->get_content();
+		std::cout << std::endl;
+		comments[i]->print_replies();
+	}
+}

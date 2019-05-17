@@ -9,6 +9,7 @@ public:
 	User(int id, std::string _username, std::string _email);
 	void print_information();
 	int get_id();
+	std::string get_username();
 private:
 	int user_id;
 	std::string username;

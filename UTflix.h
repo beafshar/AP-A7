@@ -10,17 +10,18 @@
 #include<map>
 
 class Customer;
+class Movie;
 
 typedef std::map<int,Customer*> CustomersMap;
+typedef std::vector<Movie*> MovieVec;
 
 class UTflix {
 public:
 	UTflix();
-	void run();
-
 private:
 	CustomersMap UTflix_users;
 	Customer* active_user;
+	MovieVec movies;
 
 };
 #endif 
