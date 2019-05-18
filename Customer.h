@@ -8,19 +8,20 @@
 #include<regex>
 #include<functional>
 
-#define PUBLISHER true;
-#define NORMAL_CUSTOMER false;
+
+#define PUBLISHER 1;
+#define NORMAL_CUSTOMER 2;
 
 class CommandHandler;
 class Message;
-class User;
+class Contact;
 class Movie;
 class Publisher;
 
 typedef std::vector<std::string> InputVec;
 typedef std::map<std::string, std::string> InformationMAP;
 typedef std::vector<Message*> MessageVec;
-typedef std::vector<User*> UsersVector;
+typedef std::vector<Contact*> ContactsVector;
 typedef std::vector<Movie*> MoviesVector;
 typedef std::pair<std::string, std::string> MapPair;
 typedef std::vector<Publisher*> PublishersVec;
@@ -45,6 +46,17 @@ public:
 	void notify_reply(std::string publisher_name, int id);
 	void view_movie_details(int film_id);
 	std::string get_username();
+	int get_type();
+	int get_id();
+
+	virtual bool publish_films(InputVec input_vector) { return 1; };
+	virtual bool edit_film_information(InputVec input_vector) { return 1; };
+	virtual bool delete_film(int id) { return 1; };
+	virtual void get_followers_list() {};
+	virtual void view_published_movies(InputVec input_vector) {};
+	virtual bool reply_comments(int film_id, int comment_id, std::string content) { return 1; };
+	virtual bool delete_comment(int film_id, int comment_id) { return 1; };
+	
 
 
 protected:
@@ -54,7 +66,7 @@ protected:
 	float money;
 	PublishersVec followings;
 	MoviesVector bought_movies;
-	bool user_type;
+	int user_type;
 	int user_id;
 };
 #endif 

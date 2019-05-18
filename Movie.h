@@ -5,7 +5,8 @@
 #include<iostream>
 #include<vector>
 #include<string>
-
+#include<regex>
+#include<sstream>
 
 class Comment;
 
@@ -30,6 +31,8 @@ public:
 	std::string get_movie_name();
 	void view_details();
 	void print_comments_and_replies();
+	bool check_publish_command_validity(InputVec input_vec);
+	bool check_price_validity(std::string price);
 private:
 	InformationMAP movie_information;
 	int film_id;

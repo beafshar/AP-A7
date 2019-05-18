@@ -22,19 +22,40 @@ void Movie::set_map_keys() {
 }
 
 void Movie::fill_movie_information(InputVec input_vector) {
-	//check input validity
-	InformationMAP::iterator it;
-	for (int i = 3; i < input_vector.size() - 1; i += 2) {
-		it = movie_information.find(input_vector[i]);
-		if (it != movie_information.end()) {
-			movie_information[it->first] = input_vector[i + 1];
+	if (check_publish_command_validity(input_vector)) {
+		InformationMAP::iterator it;
+		for (int i = 3; i < input_vector.size() - 1; i += 2) {
+			it = movie_information.find(input_vector[i]);
+			if (it != movie_information.end()) {
+				movie_information[it->first] = input_vector[i + 1];
+			}
+			else
+				throw BadRequest();
 		}
-		else
-			throw BadRequest();
-
 	}
+	else
+		throw BadRequest();
 }
 
+bool Movie::check_publish_command_validity(InputVec input_vec) {
+	for (int i = 3; i < input_vec.size(); i++) {
+		if (input_vec[i] == "price")
+			if (check_price_validity(input_vec[i + 1]) == false)
+				return false;
+	}
+	return true;
+}
+
+bool Movie::check_price_validity(std::string price) {
+	static const std::regex doubleRegex{ R"([+\-]?(?:0|[1-9]\d*)(?:\.\d*)?(?:[eE][+\-]?\d+)?)" };
+	if (std::regex_match(price, doubleRegex)) {
+		std::istringstream inputStream(price);
+		double d;
+		inputStream >> d;
+		return true;
+	}
+	return false;
+}
 void Movie::calculate_average_rate() {
 	float sum = 0;
 	for (int i = 0; i < scores.size(); i++)

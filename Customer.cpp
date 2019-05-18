@@ -1,6 +1,6 @@
 #include"Customer.h"
 #include"BadRequest.h"
-#include"User.h"
+#include"Contact.h"
 #include"Publisher.h"
 #include"Movie.h"
 #include"Message.h"
@@ -71,8 +71,8 @@ void Customer::set_user_type() {
 
 void Customer::follow_publisher(Publisher* publisher) {
 	followings.push_back(publisher);
-	User* user = new User(user_id, user_information["username"], user_information["email"]);
-	publisher->add_followers(user);
+	Contact* contact = new Contact(user_id, user_information["username"], user_information["email"]);
+	publisher->add_followers(contact);
 	/*
 	Message* msg = new Message("");
 	msg->create_follow_notif(user->get_username(), user->get_id());
@@ -103,6 +103,7 @@ bool Customer::score_movie(int id, float rate) {
 		else
 			throw BadRequest();
 	}
+	return false;
 }
 
 bool Customer::check_signup_command_validity(InputVec input_vec) {
@@ -167,4 +168,11 @@ void Customer::notify_reply(std::string publisher_name, int id) {
 
 std::string Customer::get_username() {
 	return user_information["username"];
+}
+
+int Customer::get_type() {
+	return user_type;
+}
+int Customer::get_id() {
+	return user_id;
 }
