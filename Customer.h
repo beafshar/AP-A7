@@ -44,6 +44,7 @@ public:
 	void notify_user(Message* message);
 	void notify_reply(std::string publisher_name, int id);
 	void view_movie_details(int film_id);
+	std::string get_username();
 
 
 protected:

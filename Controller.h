@@ -7,9 +7,12 @@
 
 class UTflix;
 
+typedef std::vector<std::string> InputVec;
+
 class Controller {
 public:
-	Controller(std::vector<std::string> line);
+	Controller();
+	void set_input(InputVec line);
 	void detect_POST_command();
 	void detect_PUT_command();
 	void detect_DELETE_command();
@@ -18,7 +21,7 @@ public:
 	void detect_notifucation_command();
 
 private:
-	std::vector<std::string> input_line;
+	InputVec input_line;
 	UTflix* UT_flix;
 };
 #endif 

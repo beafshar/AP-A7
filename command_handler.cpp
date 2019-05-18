@@ -2,7 +2,7 @@
 #include"Controller.h"
 
 CommandHandler::CommandHandler() {
-	
+	controller = new Controller();
 }
 
 void CommandHandler::parse_input(std::string line) {
@@ -12,17 +12,21 @@ void CommandHandler::parse_input(std::string line) {
 		input_line.push_back(word);
 }
 
-void CommandHandler::detect_command_type(std::vector<std::string> line) {
-	controller = new Controller(line);
+void CommandHandler::detect_command_type() {
+	controller->set_input(input_line);
 	std::string command = input_line[0];
-	if (command.compare("POST"))
-		controller->detect_POST_command();
-	else if (command.compare("PUT"))
-		controller->detect_PUT_command();
-	else if (command.compare("GET")) 
-		controller->detect_GET_command();
-	else if (command.compare("DELETE"))
-		controller->detect_DELETE_command();
+	if (input_line[2] == "?") {
+		if (command.compare("POST") == 0)
+			controller->detect_POST_command();
+		else if (command.compare("PUT") == 0)
+			controller->detect_PUT_command();
+		else if (command.compare("GET") == 0)
+			controller->detect_GET_command();
+		else if (command.compare("DELETE") == 0)
+			controller->detect_DELETE_command();
+		else
+			throw BadRequest();
+	}
 	else
 		throw BadRequest();
 }
@@ -32,5 +36,7 @@ void CommandHandler::run() {
 	std::string line;
 	while (std::getline(std::cin, line)) {
 		parse_input(line);
+		detect_command_type();
+		input_line.resize(0);
 	}
 }

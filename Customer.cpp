@@ -19,27 +19,29 @@ void Customer::set_map_keys() {
 }
 
 bool Customer::signup(InputVec input_vector) {
-	//check requset validity user not existed
-	InformationMAP::iterator it;
-	for (int i = 3; i < input_vector.size()- 1; i += 2) {
-		it = user_information.find(input_vector[i]);
-		if (it != user_information.end()) {
-			user_information[it->first] = input_vector[i + 1];
+	if (check_signup_command_validity(input_vector)) {
+		InformationMAP::iterator it;
+		for (int i = 3; i < input_vector.size() - 1; i += 2) {
+			it = user_information.find(input_vector[i]);
+			if (it != user_information.end()) {
+				user_information[it->first] = input_vector[i + 1];
+			}
+			else
+				throw BadRequest();
 		}
-		else
-			throw BadRequest();
+		set_user_type();
+		user_information["password"] = hash_password(user_information["password"]);
+		return true;
 	}
-	set_user_type();
-	user_information["password"] = hash_password(user_information["password"]);
-	return true;
+	return false;
 }
 
 bool Customer::login(InputVec input_vector) {
-	int flag = 0;
 	for (int i = 3; i < input_vector.size(); i += 2) {
-		if (input_vector[i] == "username")
+		if (input_vector[i] == "username") {
 			if (input_vector[i + 1].compare(user_information["username"]) != 0)
 				return false;
+		}
 		else if (input_vector[i] == "password") {
 			std::string pass = hash_password(input_vector[i + 1]);
 			if (pass.compare(user_information["password"]) != 0)
@@ -56,12 +58,15 @@ void Customer::set_user_type() {
 		if (user_information["publisher"].compare("true") == 0) {
 			user_type = PUBLISHER;
 		}
-		else if (user_information["publisher"].compare("false") == 0) {
+		else if (user_information["publisher"].compare("false") == 0
+			|| user_information["publisher"].compare("") == 0) {
 			user_type = NORMAL_CUSTOMER;
 		}
 		else
 			throw BadRequest();
 	}
+
+	
 }
 
 void Customer::follow_publisher(Publisher* publisher) {
@@ -109,7 +114,7 @@ bool Customer::check_signup_command_validity(InputVec input_vec) {
 				return false;
 	}
 }
-//kar mikone regex?
+
 bool Customer::check_email_validity(std::string email) {
 	const std::regex pattern
 		("(\\w+)(\\.|_)?(\\w*)@(\\w+)(\\.(\\w+))+");
@@ -158,4 +163,8 @@ void Customer::notify_user(Message* message) {
 
 void Customer::notify_reply(std::string publisher_name, int id) {
 
+}
+
+std::string Customer::get_username() {
+	return user_information["username"];
 }

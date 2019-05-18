@@ -15,7 +15,7 @@ public:
 	CommandHandler();
 	void run();
 	void parse_input(std::string line);
-	void detect_command_type(std::vector<std::string> line);
+	void detect_command_type();
 
 private:
 	Controller* controller;

@@ -1,9 +1,12 @@
 #include"Controller.h"
 #include"UTflix.h"
 
-Controller::Controller(std::vector<std::string> line) {
-	input_line = line;
+Controller::Controller() {
 	UT_flix = new UTflix();
+}
+
+void Controller::set_input(InputVec input) {
+	input_line = input;
 }
 
 void Controller::detect_DELETE_command() {
@@ -16,6 +19,7 @@ void Controller::detect_DELETE_command() {
 		//publisher.dlete comment
 	else
 		throw BadRequest();
+	input_line.resize(0);
 
 }
 
@@ -37,6 +41,7 @@ void Controller::detect_GET_command() {
 		detect_notifucation_command();
 	else
 		throw BadRequest();
+	input_line.resize(0);
 }
 
 void Controller::detect_PUT_command() {
@@ -46,16 +51,15 @@ void Controller::detect_PUT_command() {
 	}
 	else
 		throw BadRequest();
+	input_line.resize(0);
 }
 
 void Controller::detect_POST_command() {
 	std::string command = input_line[1];
-	if (command.compare("signup") == 0) {
-		//customer.signup
-	}
-	else if (command.compare("login") == 0) {
-		//customer. login
-	}
+	if (command.compare("signup") == 0)
+		UT_flix->signup(input_line);
+	else if (command.compare("login") == 0)
+		UT_flix->login(input_line);
 	else if (command.compare("films") == 0) {
 		//publisher. upload film
 	}
@@ -82,6 +86,7 @@ void Controller::detect_POST_command() {
 	}
 	else
 		throw BadRequest();
+	input_line.resize(0);
 }
 
 void Controller::detect_films_command() {
