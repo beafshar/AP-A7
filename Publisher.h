@@ -8,7 +8,7 @@ class Movie;
 class Publisher :public Customer {
 public:
 	Publisher(int id);
-	virtual bool publish_films(InputVec input_vector);
+	virtual Movie* publish_films(InputVec input_vector, int id);
 	virtual bool edit_film_information(InputVec input_vector);
 	virtual bool delete_film(int id);
 	virtual void get_followers_list();

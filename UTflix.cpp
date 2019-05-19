@@ -3,6 +3,7 @@
 #include"BadRequest.h"
 #include"PermissionDenied.h"
 #include"Publisher.h"
+#include"Movie.h"
 
 UTflix::UTflix() {
 	net_money = 0;
@@ -76,8 +77,12 @@ bool UTflix::check_user_type() {
 void UTflix::upload_films(InputVec input) {
 	if (check_user_type()) {
 		if (input.size() == 15) {
-			if (active_user->publish_films(input))
+			if (check_if_movie_existed() == false) {
+				movies.push_back(active_user->publish_films(input, movies.size()));
 				std::cout << "OK" << std::endl;
+			}
+			else
+				throw;
 		}
 		else
 			throw BadRequest();
@@ -86,6 +91,13 @@ void UTflix::upload_films(InputVec input) {
 		throw PermissionDenied();
 }
 
+bool UTflix::check_if_movie_existed() {
+	for (int i = 0; i < movies.size(); i++) {
+		if (i == movies[i]->get_film_id())
+			return true;
+	}
+	return false;
+}
 void UTflix::edit_movie(InputVec input) {
 	if (check_user_type()) {
 		if (input.size() >= 5 && input.size() % 2 == 1) {
@@ -145,8 +157,11 @@ void UTflix::increase_user_money(InputVec input) {
 }
 
 void UTflix::view_movie_details(std::string input) {
-	int id = std::stoi(input);
-	active_user->view_movie_details(id);
+	if (check_if_movie_existed()) {
+		int id = std::stoi(input);
+		active_user->view_movie_details(id);
+	}
+	throw;
 }
 
 void UTflix::follow_publisher(InputVec input) {

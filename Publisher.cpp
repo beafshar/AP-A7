@@ -6,12 +6,11 @@ Publisher::Publisher(int id) : Customer(id) {
 	user_type = PUBLISHER;
 }
 
-bool Publisher::publish_films(InputVec input_vector) {
-		Movie* film = new Movie(input_vector ,published_movies.size());
-		published_movies.push_back(film);
+Movie* Publisher::publish_films(InputVec input_vector , int id) {
+	Movie* film = new Movie(input_vector ,id);
+	published_movies.push_back(film);
 		//notify members
-	//check if movie not existed before
-	return true;
+	return film;
 }
 
 bool Publisher::edit_film_information(InputVec input_vector) {
@@ -28,10 +27,12 @@ bool Publisher::edit_film_information(InputVec input_vector) {
 
 bool Publisher::delete_film(int id) {
 	for (int i = 0; i < published_movies.size(); i++) {
-		if (published_movies[i]->get_film_id() == id)
+		if (published_movies[i]->get_film_id() == id) {
 			published_movies[i]->delete_movie();
+			return true;
+		}
 	}
-	return true;
+	throw PermissionDenied();
 }
 
 void Publisher::get_followers_list() {

@@ -19,7 +19,7 @@ void Controller::detect_DELETE_command() {
 		}
 		//publisher.dlete comment
 		else
-			throw BadRequest();
+			throw NotFound();
 		input_line.resize(0);
 	}
 	catch (const std::exception& exp) {
@@ -44,7 +44,7 @@ void Controller::detect_GET_command() {
 		else if (command.compare("notification") == 0)
 			detect_notifucation_command();
 		else
-			throw BadRequest();
+			throw NotFound();
 		input_line.resize(0);
 	}
 	catch (const std::exception& exp) {
@@ -58,7 +58,7 @@ void Controller::detect_PUT_command() {
 		if (command.compare("films") == 0)
 			UT_flix->edit_movie(input_line);
 		else
-			throw BadRequest();
+			throw NotFound();
 		input_line.resize(0);
 	}
 	catch (const std::exception& exp) {
@@ -96,7 +96,7 @@ void Controller::detect_POST_command() {
 			//customer comments on movie
 		}
 		else
-			throw BadRequest();
+			throw NotFound();
 		input_line.resize(0);
 	}
 	catch (const std::exception& exp) {

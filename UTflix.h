@@ -42,6 +42,7 @@ public:
 	int parse_movie_id(InputVec input);
 	void set_active_user(Customer* user);
 	bool check_if_user_existed(Customer* user);
+	bool check_if_movie_existed();
 private:
 	CustomersMap UTflix_users;
 	PublishersMap publishers;
