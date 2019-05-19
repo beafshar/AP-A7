@@ -1,6 +1,5 @@
 #include"Customer.h"
 #include"BadRequest.h"
-#include"Contact.h"
 #include"Publisher.h"
 #include"Movie.h"
 #include"Message.h"
@@ -71,19 +70,15 @@ void Customer::set_user_type() {
 
 void Customer::follow_publisher(Publisher* publisher) {
 	followings.push_back(publisher);
-	Contact* contact = new Contact(user_id, user_information["username"], user_information["email"]);
-	publisher->add_followers(contact);
-	/*
-	Message* msg = new Message("");
-	msg->create_follow_notif(user->get_username(), user->get_id());
-	*/
+	publisher->add_followers(this);
 
 }
 
 void Customer::view_movie_details(int film_id) {
 	for (int i = 0; i < bought_movies.size(); i++) {
 		if (bought_movies[i]->get_film_id() == film_id)
-			bought_movies[i]->view_details();
+			if(bought_movies[i]->if_deleted()==false)
+				bought_movies[i]->view_details();
 	}
 	//print recommendations
 }
@@ -94,11 +89,9 @@ void Customer::increase_money(float _money) {
 
 bool Customer::score_movie(int id, float rate) {
 	for (int i = 0; i < bought_movies.size(); i++) {
-		if (bought_movies[i]->get_film_id() == id) {
+		if (bought_movies[i]->get_film_id() == id && 
+			bought_movies[i]->if_deleted() == false) {
 			bought_movies[i]->score_movie(rate);
-			//ssage* msg = new Message("");
-			//g->create_rate_film_notif(user_information["username"],user_id,bought_movies[i]->g
-			//tify_user(msg);
 		}
 		else
 			throw BadRequest();
@@ -128,10 +121,12 @@ std::string Customer::hash_password(std::string password) {
 	return password;
 }
 
-void Customer::comment_on_a_movie(int film_id, std::string content) {
+bool Customer::comment_on_a_movie(int film_id, std::string content) {
 	for (int i = 0; i < bought_movies.size(); i++) {
-		if (bought_movies[i]->get_film_id() == film_id) {
-			bought_movies[i]->submit_comment(content);
+		if (bought_movies[i]->get_film_id() == film_id &&
+			bought_movies[i]->if_deleted() == false) {
+			bought_movies[i]->submit_comment(content ,user_id);
+			return true;
 		}
 		else
 			throw BadRequest();
@@ -162,9 +157,6 @@ void Customer::notify_user(Message* message) {
 	notification.push_back(message);
 }
 
-void Customer::notify_reply(std::string publisher_name, int id) {
-
-}
 
 std::string Customer::get_username() {
 	return user_information["username"];
@@ -175,4 +167,9 @@ int Customer::get_type() {
 }
 int Customer::get_id() {
 	return user_id;
+}
+
+void Customer::print_followers_information() {
+	std::cout << " " << std::to_string(user_id) << " | " << user_information["username"];
+	std::cout << " | " << user_information["email"] << std::endl;
 }

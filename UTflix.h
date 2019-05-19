@@ -39,10 +39,22 @@ public:
 	void increase_user_money(InputVec input);
 	void view_movie_details(std::string input);
 	void follow_publisher(InputVec input);
-	int parse_movie_id(InputVec input);
 	void set_active_user(Customer* user);
 	bool check_if_user_existed(Customer* user);
 	bool check_if_movie_existed();
+	void comment_on_films(InputVec input);
+	void notify_publisher_has_uploaded_a_film();
+	void view_unread_notification();
+	void view_all_notification(InputVec input);
+	std::string find_needed(InputVec input, std::string need);
+	void notify_user_has_submited_comment(std::string film, int film_id);
+	void rate_movie(InputVec input);
+	void notify_user_has_rated_movie(std::string film, int film_id);
+	void reply_comment(InputVec input);
+	void notify_publisher_has_replied_comment();
+	void delete_comment(InputVec input);
+	void buy_movie(InputVec input);
+	void notify_user_has_bought_movie(std::string film, int film_id);
 private:
 	CustomersMap UTflix_users;
 	PublishersMap publishers;

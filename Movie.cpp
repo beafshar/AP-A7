@@ -2,8 +2,9 @@
 #include"BadRequest.h"
 #include"Comment.h"
 
-Movie::Movie(InputVec input_vector , int id) {
+Movie::Movie(InputVec input_vector , int id, int _publisher_id) {
 	set_map_keys();
+	publisher_id = _publisher_id;
 	fill_movie_information(input_vector);
 	deleted_by_publisher = false;
 	price = std::stof(movie_information["price"]);
@@ -81,13 +82,17 @@ void Movie::delete_movie() {
 	deleted_by_publisher = true;
 }
 
+bool Movie::if_deleted() {
+	return deleted_by_publisher;
+}
+
 void Movie::score_movie(float score) {
 	scores.push_back(score);
 	calculate_average_rate();
 }
 
-void Movie::submit_comment(std::string content) {
-	Comment* comment = new Comment(comments.size(), content);
+void Movie::submit_comment(std::string content, int user_id) {
+	Comment* comment = new Comment(comments.size(), content, user_id, film_id);
 	comments.push_back(comment);
 }
 
@@ -132,8 +137,14 @@ void Movie::view_details() {
 void Movie::print_comments_and_replies() {
 	std::cout << "Comments" << std::endl;
 	for (int i = 0; i < comments.size(); i++) {
-		std::cout << comments[i]->get_id() << ". " << comments[i]->get_content();
-		std::cout << std::endl;
-		comments[i]->print_replies();
+		if (comments[i]->check_if_deleted() == false) {
+			std::cout << comments[i]->get_id() << ". " << comments[i]->get_content();
+			std::cout << std::endl;
+			comments[i]->print_replies();
+		}
 	}
+}
+
+int Movie::get_publisher_id() {
+	return publisher_id;
 }

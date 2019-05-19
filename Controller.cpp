@@ -15,9 +15,7 @@ void Controller::detect_DELETE_command() {
 		if (command.compare("films") == 0)
 			UT_flix->delete_movie(input_line);
 		else if (command.compare("comments") == 0)
-		{
-		}
-		//publisher.dlete comment
+			UT_flix->delete_comment(input_line);
 		else
 			throw NotFound();
 		input_line.resize(0);
@@ -77,24 +75,18 @@ void Controller::detect_POST_command() {
 			UT_flix->upload_films(input_line);
 		else if (command.compare("money") == 0)
 			UT_flix->increase_user_money(input_line);
-		else if (command.compare("replies") == 0) {
-			//publisher reply comments
-		}
-		else if (command.compare("followers") == 0) {
-			//customer follows publisher
-		}
-		else if (command.compare("money") == 0) {
-			//customers charges account
-		}
-		else if (command.compare("buy") == 0) {
-			//customer buys film
-		}
-		else if (command.compare("rate") == 0) {
-			//customrs rate movies
-		}
-		else if (command.compare("comments") == 0) {
-			//customer comments on movie
-		}
+		else if (command.compare("replies") == 0)
+			UT_flix->reply_comment(input_line);
+		else if (command.compare("followers") == 0)
+			UT_flix->follow_publisher(input_line);
+		else if (command.compare("money") == 0)
+			UT_flix->increase_user_money(input_line);
+		else if (command.compare("buy") == 0)
+			UT_flix->buy_movie(input_line);
+		else if (command.compare("rate") == 0)
+			UT_flix->rate_movie(input_line);
+		else if (command.compare("comments") == 0)
+			UT_flix->comment_on_films(input_line);
 		else
 			throw NotFound();
 		input_line.resize(0);
@@ -116,12 +108,10 @@ void Controller::detect_films_command() {
 
 void Controller::detect_notifucation_command() {
 	std::string command = input_line[2];
-	if (command.compare("read") == 0) {
-		//customers reads all notifs
-	}
-	else if (command.compare("?") == 0) {
-		//customers wants new massages
-	}
+	if (command.compare("read") == 0)
+		UT_flix->view_all_notification(input_line);
+	else if (command.compare("?") == 0 || command.compare("") == 0)
+		UT_flix->view_unread_notification();
 	else
 		throw BadRequest();
 }

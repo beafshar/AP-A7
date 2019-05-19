@@ -1,15 +1,15 @@
 #include"Publisher.h"
 #include"Movie.h"
-#include"Contact.h"
+
+
 
 Publisher::Publisher(int id) : Customer(id) {
 	user_type = PUBLISHER;
 }
 
 Movie* Publisher::publish_films(InputVec input_vector , int id) {
-	Movie* film = new Movie(input_vector ,id);
+	Movie* film = new Movie(input_vector ,id,user_id);
 	published_movies.push_back(film);
-		//notify members
 	return film;
 }
 
@@ -41,15 +41,15 @@ void Publisher::get_followers_list() {
 	std::sort(followers.begin(), followers.end(), Publisher::compare_by_id);
 	for (int i = 0; i < followers.size(); i++) {
 		std::cout << i + 1 << ".";
-		followers[i]->print_information();
+		followers[i]->print_followers_information();
 	}
 }
 //in sorte kar mikone ya na?
-bool Publisher::compare_by_id(Contact* a, Contact* b) {
+bool Publisher::compare_by_id(Customer* a, Customer* b) {
 	return (a->get_id()) < (b->get_id());
 }
 
-void Publisher::add_followers(Contact* user) {
+void Publisher::add_followers(Customer* user) {
 	followers.push_back(user);
 }
 ///////
@@ -72,4 +72,10 @@ bool Publisher::delete_comment(int film_id, int comment_id) {
 			return published_movies[i]->delete_comment(comment_id);
 	}
 	return false;
+}
+
+void Publisher::notify_followers(Message* message) {
+	for (int i = 0; i < followers.size(); i++) {
+		followers[i]->notify_user(message);
+	}
 }

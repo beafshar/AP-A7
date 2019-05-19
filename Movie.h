@@ -17,7 +17,7 @@ typedef std::pair<std::string, std::string> MapPair;
 
 class Movie {
 public:
-	Movie(InputVec input_vector , int id);
+	Movie(InputVec input_vector , int id, int _publisher_id);
 	void fill_movie_information(InputVec input_vector);
 	void set_map_keys();
 	void calculate_average_rate();
@@ -25,7 +25,7 @@ public:
 	void edit_movie_information(InputVec input_vector);
 	void delete_movie();
 	void score_movie(float score);
-	void submit_comment(std::string content);
+	void submit_comment(std::string content ,int user_id);
 	bool delete_comment(int id);
 	bool reply_comment(int id, std::string content);
 	std::string get_movie_name();
@@ -33,9 +33,12 @@ public:
 	void print_comments_and_replies();
 	bool check_publish_command_validity(InputVec input_vec);
 	bool check_price_validity(std::string price);
+	int get_publisher_id();
+	bool if_deleted();
 private:
 	InformationMAP movie_information;
 	int film_id;
+	int publisher_id;
 	float price;
 	bool deleted_by_publisher;
 	std::vector<int> scores;

@@ -11,14 +11,17 @@ typedef std::pair<int, std::vector<std::string>> ReplyPair;
 
 class Comment :public Message{
 public:
-	Comment(int id, std::string _content);
+	Comment(int id, std::string _content, int user_id, int movie_id);
 	int get_id();
 	void delete_comment();
 	void reply(std::string content);
 	void print_replies();
+	virtual int get_user();
+	bool check_if_deleted();
 
 private:
 	int user;
+	int movie_id;
 	std::vector<std::string> replies;
 	int comment_id;
 	bool comment_deleted;
