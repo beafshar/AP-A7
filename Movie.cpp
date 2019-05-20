@@ -8,11 +8,15 @@ Movie::Movie(InputVec input_vector , int id, int _publisher_id) {
 	publisher_id = _publisher_id;
 	fill_movie_information(input_vector);
 	deleted_by_publisher = false;
-	price = std::stof(movie_information["price"]);
 	sold_to_user = false;
+	price = std::stoi(movie_information["price"]);
 	film_id = id;
 	rate = 0;
 
+}
+
+bool Movie::if_movie_was_sold() {
+	return sold_to_user;
 }
 
 void Movie::set_map_keys() {
@@ -50,11 +54,11 @@ bool Movie::check_publish_command_validity(InputVec input_vec) {
 }
 
 bool Movie::check_price_validity(std::string price) {
-	static const std::regex doubleRegex{ R"([+\-]?(?:0|[1-9]\d*)(?:\.\d*)?(?:[eE][+\-]?\d+)?)" };
-	if (std::regex_match(price, doubleRegex)) {
+	static const std::regex intRegex{ R"(\d+)" };
+	if (std::regex_match(price, intRegex)) {
 		std::istringstream inputStream(price);
-		double d;
-		inputStream >> d;
+		int i;
+		inputStream >> i;
 		return true;
 	}
 	return false;
@@ -127,7 +131,7 @@ void Movie::view_details() {
 	std::cout << "Details of Film " << movie_information["name"] << std::endl;
 	std::cout << "Id = " << film_id << std::endl;
 	std::cout << "Director = " << movie_information["director"] << std::endl;
-	std::cout << "Length = " << movie_information["lenght"] << std::endl;
+	std::cout << "Length = " << movie_information["length"] << std::endl;
 	std::cout << "Year = " << movie_information["year"] << std::endl;
 	std::cout << "Summary = " << movie_information["summary"] << std::endl;
 	std::cout << "Rate = " << rate << std::endl;
@@ -164,14 +168,19 @@ void Movie::print_recommendation() {
 int Movie::buy_movie(int user_id) {
 	Sale* sold_movie = new Sale(film_id, rate, price, user_id, publisher_id);
 	sold_movies.push_back(sold_movie);
+	sold_to_user = true;
 	return price;
 }
 
-bool Movie::if_user_has_bought() {
-	return sold_to_user;
+bool Movie::if_user_has_bought(int user_id) {
+	for (int i = 0; i < sold_movies.size(); i++) {
+		if (sold_movies[i]->get_customer_id() == user_id)
+			return true;
+	}
+	return false;
 }
 
-float Movie::get_price() {
+int Movie::get_price() {
 	return price;
 }
 
@@ -193,3 +202,5 @@ std::string Movie::get_director() {
 int Movie::get_year() {
 	return std::stoi(movie_information["year"]);
 }
+
+

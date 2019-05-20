@@ -8,6 +8,7 @@ public:
 	void pay_to_publisher();
 	float calculate_publisher_share();
 	bool if_paid_to_publisher();
+	int get_customer_id();
 
 private:
 	float rate;

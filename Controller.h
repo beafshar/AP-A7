@@ -20,6 +20,7 @@ public:
 	void detect_GET_command();
 	void detect_films_command();
 	void detect_notifucation_command();
+	void detect_money_command();
 
 private:
 	InputVec input_line;

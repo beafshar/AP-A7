@@ -10,8 +10,8 @@
 #include"PermissionDenied.h"
 
 
-#define PUBLISHER 1;
-#define NORMAL_CUSTOMER 2;
+#define USER_PUBLISHER 1
+#define USER_CUSTOMER 2
 
 class CommandHandler;
 class Message;
@@ -36,7 +36,7 @@ public:
 	void set_user_type();
 	void follow_publisher(Publisher* publisher);
 	void increase_money(float _money);
-	bool score_movie(int id, float rate);
+	bool score_movie(int id, int rate);
 	bool check_signup_command_validity(InputVec input_vector);
 	bool check_email_validity(std::string email);
 	std::string hash_password(std::string password);
@@ -44,7 +44,6 @@ public:
 	void get_unread_notifications();
 	void get_all_notification(int limit);
 	void notify_user(Message* message);
-	void view_movie_details(int film_id);
 	std::string get_username();
 	int get_type();
 	int get_id();
@@ -60,11 +59,11 @@ public:
 	virtual bool reply_comments(int film_id, int comment_id, std::string content) { return 1; };
 	virtual bool delete_comment(int film_id, int comment_id) { return 1; };
 	virtual void notify_followers(Message* message) {};
+	virtual bool if_follower_exists(int id) { return 1; }
 
 
 protected:
 	InformationMAP user_information;
-	bool user_is_a_publisher;
 	MessageVec notification;
 	float money;
 	PublishersVec followings;

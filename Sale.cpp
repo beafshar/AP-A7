@@ -26,3 +26,7 @@ float Sale::calculate_publisher_share() {
 bool Sale::if_paid_to_publisher() {
 	return paid_to_publisher;
 }
+
+int Sale::get_customer_id() {
+	return user_id;
+}

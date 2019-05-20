@@ -40,16 +40,17 @@ public:
 	float get_rate();
 	void print_recommendation();
 	int buy_movie(int user_id);
-	bool if_user_has_bought();
-	float get_price();
+	bool if_user_has_bought(int user_id);
+	int get_price();
 	float pay_to_publisher();
 	std::string get_director();
 	int get_year();
+	bool if_movie_was_sold();
 private:
 	InformationMAP movie_information;
 	int film_id;
 	int publisher_id;
-	float price;
+	int price;
 	bool deleted_by_publisher;
 	bool sold_to_user;
 	std::vector<int> scores;

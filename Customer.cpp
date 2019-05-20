@@ -5,6 +5,8 @@
 #include"Message.h"
 
 Customer::Customer(int id) {
+	user_type = USER_CUSTOMER;
+	money = 0;
 	set_map_keys();
 	user_id = id;
 }
@@ -55,11 +57,11 @@ void Customer::set_user_type() {
 	it = user_information.find("publisher");
 	if (it != user_information.end()) {
 		if (user_information["publisher"].compare("true") == 0) {
-			user_type = PUBLISHER;
+			user_type = USER_PUBLISHER;
 		}
 		else if (user_information["publisher"].compare("false") == 0
 			|| user_information["publisher"].compare("") == 0) {
-			user_type = NORMAL_CUSTOMER;
+			user_type = USER_CUSTOMER;
 		}
 		else
 			throw BadRequest();
@@ -67,24 +69,21 @@ void Customer::set_user_type() {
 }
 
 void Customer::follow_publisher(Publisher* publisher) {
-	followings.push_back(publisher);
-	publisher->add_followers(this);
-
-}
-
-void Customer::view_movie_details(int film_id) {
-	for (int i = 0; i < bought_movies.size(); i++) {
-		if (bought_movies[i]->get_film_id() == film_id)
-			if(bought_movies[i]->if_deleted()==false)
-				bought_movies[i]->view_details();
+	if (publisher->if_follower_exists(user_id) == false) {
+		followings.push_back(publisher);
+		publisher->add_followers(this);
 	}
+
 }
+
 
 void Customer::increase_money(float _money) {
 	money += _money;
 }
 
-bool Customer::score_movie(int id, float rate) {
+bool Customer::score_movie(int id, int rate) {
+	if (rate > 10 || rate < 0)
+		throw BadRequest();
 	for (int i = 0; i < bought_movies.size(); i++) {
 		if (bought_movies[i]->get_film_id() == id && 
 			bought_movies[i]->if_deleted() == false) {
@@ -93,7 +92,7 @@ bool Customer::score_movie(int id, float rate) {
 		else
 			throw BadRequest();
 	}
-	return false;
+	return true;
 }
 
 
@@ -133,22 +132,26 @@ bool Customer::comment_on_a_movie(int film_id, std::string content) {
 }
 
 void Customer::get_unread_notifications() {
+	int count = 1;
 	std::cout << "#. Notification Message " << std::endl;
 	for (int i = notification.size() - 1; i > -1;i--){
 		if (notification[i]->if_read() == false) {
 			notification[i]->read_message();
-			std::cout << i + 1 << ". " << notification[i]->get_content();
+			std::cout << count << ". " << notification[i]->get_content();
 			std::cout << std::endl;
 		}
+		count++;
 	}
 }
 
 void Customer::get_all_notification(int limit) {
+	int count = 1;
 	std::cout << "#. Notification Message " << std::endl;
-	for (int i = notification.size(); limit != 0; i--) {
-		std::cout << i + 1 << ". " << notification[i]->get_content();
-		std::cout << std::endl;
+	for (int i = notification.size() - 1; limit != 0; i--) {
+		std::cout << count << ". ";
+		std::cout << notification[i]->get_content()<< std::endl;
 		limit--;
+		count++;
 	}
 }
 void Customer::notify_user(Message* message) {
@@ -178,7 +181,7 @@ bool Customer::buy_movie(Movie* movie) {
 		money -= movie->get_price();
 		return true;
 	}
-	return false;
+	throw PermissionDenied();
 }
 
 bool Customer::check_if_user_has_bought_movie(int id) {

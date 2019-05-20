@@ -38,7 +38,7 @@ void Controller::detect_GET_command() {
 			detect_films_command();
 		else if (command.compare("purchased") == 0)
 			UT_flix->user_views_his_bought_movies(input_line);
-		else if (command.compare("notification") == 0)
+		else if (command.compare("notifications") == 0)
 			detect_notifucation_command();
 		else
 			throw NotFound();
@@ -106,19 +106,18 @@ void Controller::detect_films_command() {
 }
 
 void Controller::detect_notifucation_command() {
-	std::string command = input_line[2];
-	if (command.compare("read") == 0)
-		UT_flix->view_all_notification(input_line);
-	else if (command.compare("?") == 0 || command.compare("") == 0)
+	if (input_line.size() == 2 || input_line.size() == 3)
 		UT_flix->view_unread_notification();
+	else if (input_line[2].compare("read") == 0)
+		UT_flix->view_all_notification(input_line);
+	
 	else
 		throw BadRequest();
 }
 
 void Controller::detect_money_command() {
-	if (input_line.size() == 2 || input_line.size() == 3) {
+	if (input_line.size() == 2 || input_line.size() == 3)
 		UT_flix->pay_to_publisher();
-	}
 	else if (input_line[3].compare("amount") == 0)
 		UT_flix->increase_user_money(input_line);
 	else

@@ -4,7 +4,7 @@
 
 
 Publisher::Publisher(int id) : Customer(id) {
-	user_type = PUBLISHER;
+	user_type = USER_PUBLISHER;
 }
 
 Movie* Publisher::publish_films(InputVec input_vector , int id) {
@@ -21,7 +21,7 @@ bool Publisher::edit_film_information(InputVec input_vector) {
 			return true;
 		}
 	}
-	return false;
+	throw PermissionDenied();
 }
 
 bool Publisher::delete_film(int id) {
@@ -82,10 +82,18 @@ void Publisher::notify_followers(Message* message) {
 float Publisher::publisher_get_paid() {
 	float net_money = 0;
 	for (int i = 0; i < published_movies.size(); i++) {
-		if (published_movies[i]->if_user_has_bought()) {
+		if (published_movies[i]->if_movie_was_sold()) {
 			net_money += published_movies[i]->pay_to_publisher();
 		}	
 	}
 	money += net_money;
 	return net_money;
+}
+
+bool Publisher::if_follower_exists(int id) {
+	for (int i = 0; i < followers.size(); i++) {
+		if (followers[i]->get_id() == id)
+			return true;
+	}
+	return false;
 }

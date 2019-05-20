@@ -9,8 +9,8 @@
 #include"command_handler.h"
 #include<map>
 
-#define PUBLISHER 1;
-#define NORMAL_CUSTOMER 2;
+#define USER_PUBLISHER 1;
+#define USER_CUSTOMER 2;
 #define NULL_USER -1
 
 class Customer;
@@ -27,7 +27,7 @@ typedef std::pair<int, Publisher*> PublisherPair;
 class UTflix {
 public:
 	UTflix();
-	void add_publishers(int id);
+	void add_publishers(Customer* user);
 	void signup(InputVec input);
 	Publisher* find_publisher(int id);
 	bool check_user_type();
@@ -41,7 +41,7 @@ public:
 	void follow_publisher(InputVec input);
 	void set_active_user(Customer* user);
 	bool check_if_user_existed(Customer* user);
-	bool check_if_movie_existed();
+	bool check_if_movie_existed(int id);
 	void comment_on_films(InputVec input);
 	void notify_publisher_has_uploaded_a_film();
 	void view_unread_notification();
@@ -55,6 +55,7 @@ public:
 	void delete_comment(InputVec input);
 	void buy_movie(InputVec input);
 	void notify_user_has_bought_movie(std::string film, int film_id);
+	void notify_user_has_followed_publisher(int id);
 	//
 	void publisher_views_his_published_movies() {};
 	void print_recommendation_films();
@@ -64,6 +65,7 @@ public:
 	void user_views_his_bought_movies(InputVec input) {};
 	void pay_to_publisher();
 	bool check_rate_validity(std::string rate);
+
 private:
 	CustomersMap UTflix_users;
 	PublishersMap publishers;
