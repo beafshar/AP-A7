@@ -14,6 +14,7 @@ public:
 	virtual void get_followers_list();
 	static bool compare_by_id(Customer* a, Customer* b);
 	void add_followers(Customer* user);
+	virtual float publisher_get_paid();
 	virtual void view_published_movies(InputVec input_vector);
 	virtual bool reply_comments(int film_id, int comment_id, std::string content);
 	virtual bool delete_comment(int film_id, int comment_id);

@@ -64,8 +64,6 @@ void Customer::set_user_type() {
 		else
 			throw BadRequest();
 	}
-
-	
 }
 
 void Customer::follow_publisher(Publisher* publisher) {
@@ -80,7 +78,6 @@ void Customer::view_movie_details(int film_id) {
 			if(bought_movies[i]->if_deleted()==false)
 				bought_movies[i]->view_details();
 	}
-	//print recommendations
 }
 
 void Customer::increase_money(float _money) {
@@ -98,6 +95,8 @@ bool Customer::score_movie(int id, float rate) {
 	}
 	return false;
 }
+
+
 
 bool Customer::check_signup_command_validity(InputVec input_vec) {
 	if (input_vec.size() < 11 || input_vec.size() > 13)
@@ -152,7 +151,6 @@ void Customer::get_all_notification(int limit) {
 		limit--;
 	}
 }
-
 void Customer::notify_user(Message* message) {
 	notification.push_back(message);
 }
@@ -172,4 +170,21 @@ int Customer::get_id() {
 void Customer::print_followers_information() {
 	std::cout << " " << std::to_string(user_id) << " | " << user_information["username"];
 	std::cout << " | " << user_information["email"] << std::endl;
+}
+
+bool Customer::buy_movie(Movie* movie) {
+	if (money >= movie->get_price()) {
+		bought_movies.push_back(movie);
+		money -= movie->get_price();
+		return true;
+	}
+	return false;
+}
+
+bool Customer::check_if_user_has_bought_movie(int id) {
+	for (int i = 0; i < bought_movies.size(); i++) {
+		if (bought_movies[i]->get_film_id() == id)
+			return true;;
+	}
+	return false;
 }

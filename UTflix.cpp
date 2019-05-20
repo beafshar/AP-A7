@@ -82,9 +82,7 @@ void UTflix::upload_films(InputVec input) {
 				movies.push_back(active_user->publish_films(input, movies.size()));
 				notify_publisher_has_uploaded_a_film();
 				std::cout << "OK" << std::endl;
-			}
-			else
-				throw;
+			}                                      
 		}
 		else
 			throw BadRequest();
@@ -95,7 +93,7 @@ void UTflix::upload_films(InputVec input) {
 
 void UTflix::notify_publisher_has_uploaded_a_film() {
 	Message* message = new Message("");
-	message->create_publish_film_notif(active_user->get_username(), active_user->get_id);
+	message->create_publish_film_notif(active_user->get_username(), active_user->get_id());
 	active_user->notify_followers(message);
 }
 
@@ -156,6 +154,7 @@ void UTflix::view_movie_details(std::string input) {
 	if (check_if_movie_existed()) {
 		int id = std::stoi(input);
 		active_user->view_movie_details(id);
+		print_recommendation_films();
 	}
 	throw;
 }
@@ -192,11 +191,11 @@ void UTflix::notify_user_has_submited_comment(std::string film, int film_id) {
 	Message* message = new Message("");
 	message->create_comment_film_notif(active_user->get_username(), active_user->get_id(),
 		film, film_id);
-	UTflix_users[movies[film_id]->get_publisher_id]->notify_user(message);
+	UTflix_users[movies[film_id]->get_publisher_id()]->notify_user(message);
 }
 
 std::string UTflix::find_needed(InputVec input, std::string need) {
-	for (int i = 0; i < input.size(); i++) {
+	for (int i = 0; i < input.size() - 1; i++) {
 		if (input[i] == need)
 			return input[i + 1];
 	}
@@ -218,8 +217,10 @@ void UTflix::view_unread_notification() {
 
 void UTflix::rate_movie(InputVec input) {
 	if (input.size() == 7) {
+		float score = 0;
 		int id = std::stoi(find_needed(input, "film_id"));
-		float score = std::stof(find_needed(input, "score"));
+		if(check_rate_validity(find_needed(input, "score")))
+			score = std::stof(find_needed(input, "score"));
 		if (active_user->score_movie(id, score)) {
 			notify_user_has_rated_movie(movies[id]->get_movie_name(), id);
 			std::cout << "OK" << std::endl;
@@ -228,11 +229,22 @@ void UTflix::rate_movie(InputVec input) {
 	throw BadRequest();
 }
 
+bool UTflix::check_rate_validity(std::string rate) {
+	static const std::regex doubleRegex{ R"([+\-]?(?:0|[1-9]\d*)(?:\.\d*)?(?:[eE][+\-]?\d+)?)" };
+	if (std::regex_match(rate, doubleRegex)) {
+		std::istringstream inputStream(rate);
+		double d;
+		inputStream >> d;
+		return true;
+	}
+	return false;
+}
+
 void UTflix::notify_user_has_rated_movie(std::string film, int film_id) {
 	Message* message = new Message("");
 	message->create_rate_film_notif(active_user->get_username(), active_user->get_id(),
 		film, film_id);
-	UTflix_users[movies[film_id]->get_publisher_id]->notify_user(message);
+	UTflix_users[movies[film_id]->get_publisher_id()]->notify_user(message);
 }
 
 void UTflix::reply_comment(InputVec input) {
@@ -255,8 +267,8 @@ void UTflix::reply_comment(InputVec input) {
 
 void UTflix::notify_publisher_has_replied_comment() {
 	Message* message = new Message("");
-	message->create_reply_notif(active_user->get_username(), active_user->get_id);
-	UTflix_users[message->get_user]->notify_user(message);
+	message->create_reply_notif(active_user->get_username(), active_user->get_id());
+	UTflix_users[message->get_user()]->notify_user(message);
 }
 
 void UTflix::delete_comment(InputVec input) {
@@ -278,6 +290,50 @@ void UTflix::notify_user_has_bought_movie(std::string film, int film_id) {
 	Message* message = new Message("");
 	message->create_buy_film_notif(active_user->get_username(), active_user->get_id(),
 		film, film_id);
-	UTflix_users[movies[film_id]->get_publisher_id]->notify_user(message);
+	UTflix_users[movies[film_id]->get_publisher_id()]->notify_user(message);
 
+}
+
+void UTflix::buy_movie(InputVec input) {
+	if (input.size() == 5) {
+		int id = std::stoi(find_needed(input, "film_id"));
+		if (movies[id]->if_user_has_bought() == false && 
+			active_user->buy_movie(movies[id])) {
+			net_money += movies[id]->buy_movie(active_user->get_id());
+			notify_user_has_bought_movie(movies[id]->get_movie_name(), id);
+			std::cout << "OK" << std::endl;
+
+		}
+
+	}
+	throw BadRequest();
+}
+//check sorts
+void UTflix::print_recommendation_films() {
+	std::cout << "Recommendation Film" << std::endl;
+	std::cout << "#. Film Id | Film Name | Film Length | Film Director " << std::endl;
+	std::sort(movies.begin(), movies.end(), UTflix::compare_by_id);
+	std::sort(movies.begin(), movies.end(), UTflix::compare_by_rate);
+	for (int i = 0; i < 4; i++) {
+		if (active_user->check_if_user_has_bought_movie
+			(movies[i]->get_film_id()) == false) {
+			std::cout << i + 1 << ". ";
+			movies[i]->print_recommendation();
+		}
+	}
+}
+
+bool UTflix::compare_by_id(Movie*a, Movie* b) {
+	return (a->get_film_id()) < (b->get_film_id());
+}
+
+bool UTflix::compare_by_rate(Movie*a, Movie* b) {
+	return (a->get_rate()) > (b->get_rate());
+}
+
+void UTflix::pay_to_publisher() {
+	if (check_user_type()) {
+		net_money -= active_user->publisher_get_paid();
+	}
+	throw PermissionDenied();
 }

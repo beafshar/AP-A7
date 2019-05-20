@@ -49,7 +49,9 @@ public:
 	int get_type();
 	int get_id();
 	void print_followers_information();
-
+	bool buy_movie(Movie* movie);
+	bool check_if_user_has_bought_movie(int id);
+	virtual float publisher_get_paid() { return 0; };
 	virtual Movie* publish_films(InputVec input_vector, int id) { return NULL; };
 	virtual bool edit_film_information(InputVec input_vector) { return 1; };
 	virtual bool delete_film(int id) { return 1; };
@@ -57,8 +59,7 @@ public:
 	virtual void view_published_movies(InputVec input_vector) {};
 	virtual bool reply_comments(int film_id, int comment_id, std::string content) { return 1; };
 	virtual bool delete_comment(int film_id, int comment_id) { return 1; };
-	virtual void notify_followers(Message* message);
-	
+	virtual void notify_followers(Message* message) {};
 
 
 protected:

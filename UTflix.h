@@ -55,6 +55,15 @@ public:
 	void delete_comment(InputVec input);
 	void buy_movie(InputVec input);
 	void notify_user_has_bought_movie(std::string film, int film_id);
+	//
+	void publisher_views_his_published_movies() {};
+	void print_recommendation_films();
+	static bool compare_by_id(Movie* a, Movie* b);
+	static bool compare_by_rate(Movie* a, Movie* b);
+	//
+	void user_views_his_bought_movies(InputVec input) {};
+	void pay_to_publisher();
+	bool check_rate_validity(std::string rate);
 private:
 	CustomersMap UTflix_users;
 	PublishersMap publishers;

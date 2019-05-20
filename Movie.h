@@ -9,10 +9,12 @@
 #include<sstream>
 
 class Comment;
+class Sale;
 
 typedef std::vector<std::string> InputVec;
 typedef std::map<std::string, std::string> InformationMAP;
 typedef std::vector<Comment*> CommentsVector;
+typedef std::vector<Sale*> SalesVector;
 typedef std::pair<std::string, std::string> MapPair;
 
 class Movie {
@@ -35,15 +37,25 @@ public:
 	bool check_price_validity(std::string price);
 	int get_publisher_id();
 	bool if_deleted();
+	float get_rate();
+	void print_recommendation();
+	int buy_movie(int user_id);
+	bool if_user_has_bought();
+	float get_price();
+	float pay_to_publisher();
+	std::string get_director();
+	int get_year();
 private:
 	InformationMAP movie_information;
 	int film_id;
 	int publisher_id;
 	float price;
 	bool deleted_by_publisher;
+	bool sold_to_user;
 	std::vector<int> scores;
 	float rate;
 	CommentsVector comments;
+	SalesVector sold_movies;
 
 };
 #endif 

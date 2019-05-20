@@ -14,7 +14,6 @@ Movie* Publisher::publish_films(InputVec input_vector , int id) {
 }
 
 bool Publisher::edit_film_information(InputVec input_vector) {
-	
 	int id = std::stoi(input_vector[4]);
 	for (int i = 0; i < published_movies.size(); i++) {
 		if (published_movies[i]->get_film_id() == id) {
@@ -78,4 +77,15 @@ void Publisher::notify_followers(Message* message) {
 	for (int i = 0; i < followers.size(); i++) {
 		followers[i]->notify_user(message);
 	}
+}
+
+float Publisher::publisher_get_paid() {
+	float net_money = 0;
+	for (int i = 0; i < published_movies.size(); i++) {
+		if (published_movies[i]->if_user_has_bought()) {
+			net_money += published_movies[i]->pay_to_publisher();
+		}	
+	}
+	money += net_money;
+	return net_money;
 }

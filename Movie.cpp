@@ -1,6 +1,7 @@
 #include"Movie.h"
 #include"BadRequest.h"
 #include"Comment.h"
+#include"Sale.h"
 
 Movie::Movie(InputVec input_vector , int id, int _publisher_id) {
 	set_map_keys();
@@ -8,6 +9,7 @@ Movie::Movie(InputVec input_vector , int id, int _publisher_id) {
 	fill_movie_information(input_vector);
 	deleted_by_publisher = false;
 	price = std::stof(movie_information["price"]);
+	sold_to_user = false;
 	film_id = id;
 	rate = 0;
 
@@ -143,8 +145,51 @@ void Movie::print_comments_and_replies() {
 			comments[i]->print_replies();
 		}
 	}
+	std::cout << std::endl << std::endl;
+}
+
+float Movie::get_rate() {
+	return rate;
 }
 
 int Movie::get_publisher_id() {
 	return publisher_id;
+}
+
+void Movie::print_recommendation() {
+	std::cout << film_id << " | " << movie_information["name"] << " | ";
+	std::cout << movie_information["director"] << std::endl;
+}
+
+int Movie::buy_movie(int user_id) {
+	Sale* sold_movie = new Sale(film_id, rate, price, user_id, publisher_id);
+	sold_movies.push_back(sold_movie);
+	return price;
+}
+
+bool Movie::if_user_has_bought() {
+	return sold_to_user;
+}
+
+float Movie::get_price() {
+	return price;
+}
+
+float Movie::pay_to_publisher() {
+	float publisher_money = 0;
+	for (int i = 0; i < sold_movies.size(); i++) {
+		if (sold_movies[i]->if_paid_to_publisher() == false) {
+			publisher_money += sold_movies[i]->calculate_publisher_share();
+			sold_movies[i]->pay_to_publisher();
+		}
+	}
+	return publisher_money;
+}
+
+std::string Movie::get_director() {
+	return movie_information["director"];
+}
+
+int Movie::get_year() {
+	return std::stoi(movie_information["year"]);
 }
