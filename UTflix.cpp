@@ -6,6 +6,7 @@
 #include"Movie.h"
 #include"Message.h"
 #include"NotFound.h"
+#include"Filter.h"
 
 UTflix::UTflix() {
 	net_money = 0;
@@ -397,3 +398,44 @@ void UTflix::pay_to_publisher() {
 		throw PermissionDenied();
 }
 
+void UTflix::publisher_views_his_published_movies(InputVec input) {
+	if (check_user_type()) {
+		if (input.size() % 2 == 1)
+			active_user->view_published_movies(input);
+		else
+			throw BadRequest();
+	}
+	else
+		throw PermissionDenied();
+}
+
+void UTflix::user_search_movies(InputVec input) {
+	if (input.size() % 2 == 1)
+		view_filtered_movies(input);
+	else
+		throw BadRequest();
+}
+void UTflix::view_filtered_movies(InputVec input) {
+		int count = 1;
+		std::cout << "#. Film Id | Film Name | Film Length | ";
+		std::cout << "Film price | Rate | Production Year | Film Director " << std::endl;
+		Filter* filter = new Filter(input);
+		for (int i = 0; i < movies.size(); i++) {
+			Movie* m = movies[i];
+			if (movies[i]->if_deleted() == false &&
+				filter->filter_by_director(m) && filter->filter_by_max_year(m) &&
+				filter->filter_by_min_rate(m) && filter->filter_by_min_year(m) &&
+				filter->filter_by_name(m) && filter->filter_by_price(m)) {
+				std::cout << count << ". ";
+				movies[i]->view_published_details();
+			}
+			count++;
+		}	
+}
+
+void UTflix::user_views_his_bought_movies(InputVec input) {
+		if (input.size() % 2 == 1)
+			active_user->view_bought_movies(input);
+		else
+			throw BadRequest();
+}

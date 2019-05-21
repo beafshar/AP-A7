@@ -1,5 +1,6 @@
 #include"Publisher.h"
 #include"Movie.h"
+#include"Filter.h"
 
 
 
@@ -51,9 +52,20 @@ bool Publisher::compare_by_id(Customer* a, Customer* b) {
 void Publisher::add_followers(Customer* user) {
 	followers.push_back(user);
 }
-///////
-void Publisher::view_published_movies(InputVec input_vector) {
 
+void Publisher::view_published_movies(InputVec input_vector) {
+	int count = 1;
+	Filter* filter = new Filter(input_vector);
+	for (int i = 0; i < published_movies.size(); i++) {
+		Movie* m = published_movies[i];
+		if (filter->filter_by_director(m) && filter->filter_by_max_year(m) &&
+			filter->filter_by_min_rate(m) && filter->filter_by_min_year(m) &&
+			filter->filter_by_name(m) && filter->filter_by_price(m)) {
+			std::cout << count << ". ";
+			m->view_published_details();
+		}
+		count++;
+	}
 }
 
 bool Publisher::reply_comments(int film_id, int comment_id, std::string content) {
@@ -96,4 +108,22 @@ bool Publisher::if_follower_exists(int id) {
 			return true;
 	}
 	return false;
+}
+
+void Publisher::get_published_movies(InputVec input_vector) {
+	int count = 1;
+	std::cout << "#. Film Id | Film Name | Film Length | ";
+	std::cout << "Film price | Rate | Production Year | Film Director " << std::endl;
+	Filter* filter = new Filter(input_vector);
+	for (int i = 0; i < published_movies.size(); i++) {
+		Movie* m = published_movies[i];
+		if (published_movies[i]->if_deleted() == false &&
+			filter->filter_by_director(m) && filter->filter_by_max_year(m) &&
+			filter->filter_by_min_rate(m) && filter->filter_by_min_year(m) &&
+			filter->filter_by_name(m) && filter->filter_by_price(m)) {
+			std::cout << count << ". ";
+			published_movies[i]->view_published_details();
+		}
+		count++;
+	}
 }

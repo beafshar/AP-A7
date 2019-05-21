@@ -31,9 +31,8 @@ void Controller::detect_GET_command() {
 		std::string command = input_line[1];
 		if (command.compare("followers") == 0)
 			UT_flix->get_followers_list();
-		else if (command.compare("published") == 0) {
-			//publisher. see published films
-		}
+		else if (command.compare("published") == 0)
+			UT_flix->publisher_views_his_published_movies(input_line);
 		else if (command.compare("films") == 0)
 			detect_films_command();
 		else if (command.compare("purchased") == 0)
@@ -96,13 +95,12 @@ void Controller::detect_POST_command() {
 }
 
 void Controller::detect_films_command() {
-	for (int i = 0; i < input_line.size(); i++) {
-		if (input_line[i].compare("film_id") == 0) {
-			UT_flix->view_movie_details(input_line[i + 1]);
-			return;
-		}
-	}
-	//utflix search films
+	if (input_line.size() == 2 || input_line.size() == 3)
+		UT_flix->user_search_movies(input_line);
+	else if(input_line[3].compare("film_id") == 0)
+			UT_flix->view_movie_details(input_line[4]);
+	else
+		throw BadRequest();
 }
 
 void Controller::detect_notifucation_command() {

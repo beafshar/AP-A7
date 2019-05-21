@@ -3,6 +3,7 @@
 #include"Publisher.h"
 #include"Movie.h"
 #include"Message.h"
+#include"Filter.h"
 
 Customer::Customer(int id) {
 	user_type = USER_CUSTOMER;
@@ -190,4 +191,21 @@ bool Customer::check_if_user_has_bought_movie(int id) {
 			return true;;
 	}
 	return false;
+}
+
+void Customer::view_bought_movies(InputVec input) {
+	int count = 1;
+	std::cout << "#. Film Id | Film Name | Film Length | ";
+	std::cout << "Film price | Rate | Production Year | Film Director " << std::endl;
+	Filter* filter = new Filter(input);
+	for (int i = 0; i < bought_movies.size(); i++) {
+		Movie* m = bought_movies[i];
+		if (bought_movies[i]->if_deleted() == false && filter->filter_by_director(m)
+			&& filter->filter_by_max_year(m) && filter->filter_by_min_year(m) &&
+			filter->filter_by_name(m) && filter->filter_by_price(m)) {
+			std::cout << count << ". ";
+			m->view_published_details();
+		}
+		count++;
+	}
 }

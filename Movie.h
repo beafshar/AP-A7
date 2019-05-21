@@ -48,6 +48,7 @@ public:
 	int get_year();
 	bool if_movie_was_sold();
 	bool check_if_comment_exists(int id);
+	void view_published_details();
 private:
 	InformationMAP movie_information;
 	int film_id;

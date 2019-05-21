@@ -56,8 +56,7 @@ public:
 	void buy_movie(InputVec input);
 	void notify_user_has_bought_movie(std::string film, int film_id);
 	void notify_user_has_followed_publisher(int id);
-	//
-	void publisher_views_his_published_movies() {};
+	void publisher_views_his_published_movies(InputVec input);
 	void print_recommendation_films(int id);
 	static bool compare_by_id(Movie* a, Movie* b);
 	static bool compare_by_rate(Movie* a, Movie* b);
@@ -66,6 +65,8 @@ public:
 	void pay_to_publisher();
 	bool check_rate_validity(std::string rate);
 	bool check_if_comment_existed(int film_id, int comment_id);
+	void user_search_movies(InputVec input);
+	void view_filtered_movies(InputVec input);
 
 private:
 	CustomersMap UTflix_users;

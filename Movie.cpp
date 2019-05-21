@@ -212,3 +212,10 @@ bool Movie::check_if_comment_exists(int id) {
 	throw NotFound();
 }
 
+
+void Movie::view_published_details() {
+	std::cout << film_id << " | " << movie_information["name"] << " | ";
+	std::cout << movie_information["length"] << " | " << price << " | ";
+	std::cout << std::setprecision(2) << rate << " | " << movie_information["year"];
+	std::cout << " | " << movie_information["director"] << std::endl;
+}
