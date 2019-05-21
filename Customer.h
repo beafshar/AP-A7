@@ -9,9 +9,16 @@
 #include<functional>
 #include"PermissionDenied.h"
 
-
 #define USER_PUBLISHER 1
 #define USER_CUSTOMER 2
+#define TEMP 1
+#define MAX_RATE 10
+#define MIN_RATE 0
+#define MAX_SIGNUP_SIZE 13
+#define MIN_SIGNUP_SIZE 11
+#define START 3
+#define STEP 2
+#define ID 4
 
 class CommandHandler;
 class Message;
@@ -50,19 +57,17 @@ public:
 	void print_followers_information();
 	bool buy_movie(Movie* movie);
 	bool check_if_user_has_bought_movie(int id);
-	virtual float publisher_get_paid() { return 0; };
+	virtual float publisher_get_paid() { return TEMP; };
 	virtual Movie* publish_films(InputVec input_vector, int id) { return NULL; };
-	virtual bool edit_film_information(InputVec input_vector) { return 1; };
-	virtual bool delete_film(int id) { return 1; };
+	virtual bool edit_film_information(InputVec input_vector) { return TEMP; };
+	virtual bool delete_film(int id) { return TEMP; };
 	virtual void get_followers_list() {};
-	virtual bool reply_comments(int film_id, int comment_id, std::string content) { return 1; };
-	virtual bool delete_comment(int film_id, int comment_id) { return 1; };
+	virtual bool reply_comments(int film_id, int comment_id, std::string content) { return TEMP; };
+	virtual bool delete_comment(int film_id, int comment_id) { return TEMP; };
 	virtual void notify_followers(Message* message) {};
-	virtual bool if_follower_exists(int id) { return 1; }
+	virtual bool if_follower_exists(int id) { return TEMP; }
 	virtual void get_published_movies(InputVec input) {};
 	void view_bought_movies(InputVec input);
-
-
 protected:
 	InformationMAP user_information;
 	MessageVec notification;

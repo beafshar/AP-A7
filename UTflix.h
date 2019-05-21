@@ -1,8 +1,6 @@
 #ifndef UTFLIX_H
 #define UTFLIX_H
 
-
-
 #include<vector>
 #include<iostream>
 #include<string>
@@ -12,6 +10,15 @@
 #define USER_PUBLISHER 1;
 #define USER_CUSTOMER 2;
 #define NULL_USER -1
+#define LOGIN_SIZE 7
+#define FILM_SIZE 15
+#define MIN_COMMAND_SIZE 5
+#define COMMENTS_SIZE 7
+#define RATE_SIZE 7
+#define ALL_NOTIF_SIZE 6
+#define REPLY_SIZE 9
+#define DELETE_SIZE 7
+#define TOP4 5
 
 class Customer;
 class Movie;
@@ -51,19 +58,16 @@ public:
 	void rate_movie(InputVec input);
 	void notify_user_has_rated_movie(std::string film, int film_id);
 	void reply_comment(InputVec input);
-	void notify_publisher_has_replied_comment();
+	void notify_publisher_has_replied_comment(int film_id, int comment_id);
 	void delete_comment(InputVec input);
 	void buy_movie(InputVec input);
 	void notify_user_has_bought_movie(std::string film, int film_id);
 	void notify_user_has_followed_publisher(int id);
 	void publisher_views_his_published_movies(InputVec input);
 	void print_recommendation_films(int id);
-	static bool compare_by_id(Movie* a, Movie* b);
-	static bool compare_by_rate(Movie* a, Movie* b);
-	//
-	void user_views_his_bought_movies(InputVec input) {};
+	void user_views_his_bought_movies(InputVec input);
 	void pay_to_publisher();
-	bool check_rate_validity(std::string rate);
+	bool check_int_validity(std::string integer);
 	bool check_if_comment_existed(int film_id, int comment_id);
 	void user_search_movies(InputVec input);
 	void view_filtered_movies(InputVec input);

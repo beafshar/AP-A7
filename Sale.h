@@ -1,6 +1,10 @@
 #ifndef SALE_H
 #define SALE_H
 
+#define LOW_RATE 5
+#define MEDIUM_RATE 8
+
+
 class Sale {
 
 public:
@@ -9,7 +13,6 @@ public:
 	float calculate_publisher_share();
 	bool if_paid_to_publisher();
 	int get_customer_id();
-
 private:
 	float rate;
 	float price;

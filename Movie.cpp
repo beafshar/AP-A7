@@ -13,7 +13,6 @@ Movie::Movie(InputVec input_vector , int id, int _publisher_id) {
 	price = std::stoi(movie_information["price"]);
 	film_id = id;
 	rate = 0;
-
 }
 
 bool Movie::if_movie_was_sold() {
@@ -46,7 +45,7 @@ void Movie::fill_movie_information(InputVec input_vector) {
 }
 
 bool Movie::check_publish_command_validity(InputVec input_vec) {
-	for (int i = 3; i < input_vec.size(); i++) {
+	for (int i = START; i < input_vec.size(); i++) {
 		if (input_vec[i] == "price")
 			if (check_price_validity(input_vec[i + 1]) == false)
 				return false;
@@ -77,7 +76,7 @@ int Movie::get_film_id() {
 
 void Movie::edit_movie_information(InputVec input_vector) {
 	InformationMAP::iterator it;
-	for (int i = 3; i < input_vector.size() - 1; i += 2) {
+	for (int i = START; i < input_vector.size() - 1; i += 2) {
 		it = movie_information.find(input_vector[i]);
 		if (it != movie_information.end()) {
 			movie_information[it->first] = input_vector[i + 1];
@@ -99,7 +98,7 @@ void Movie::score_movie(float score) {
 }
 
 void Movie::submit_comment(std::string content, int user_id) {
-	Comment* comment = new Comment(comments.size(), content, user_id, film_id);
+	Comment* comment = new Comment(comments.size() + 1, content, user_id, film_id);
 	comments.push_back(comment);
 }
 
@@ -107,11 +106,10 @@ bool Movie::delete_comment(int id) {
 	for (int i = 0; i < comments.size(); i++) {
 		if (comments[i]->get_id() == id) {
 			comments[i]->delete_comment();
+			return true;
 		}
-		else
-			return false;
 	}
-	return true;
+	return false;
 }
 
 bool Movie::reply_comment(int id, std::string content) {
@@ -163,6 +161,7 @@ int Movie::get_publisher_id() {
 
 void Movie::print_recommendation() {
 	std::cout << film_id << " | " << movie_information["name"] << " | ";
+	std::cout << movie_information["length"] << " | ";
 	std::cout << movie_information["director"] << std::endl;
 }
 
@@ -218,4 +217,19 @@ void Movie::view_published_details() {
 	std::cout << movie_information["length"] << " | " << price << " | ";
 	std::cout << std::setprecision(2) << rate << " | " << movie_information["year"];
 	std::cout << " | " << movie_information["director"] << std::endl;
+}
+
+bool Movie::compare_by_id(Movie* a, Movie* b) {
+	return a->get_film_id() < b->get_film_id();
+}
+
+bool Movie::compare_by_rate(Movie*a, Movie* b) {
+	return a->get_rate() > b->get_rate();
+}
+
+int Movie::get_comment_user(int comment_id) {
+	for (int i = 0; i < comments.size(); i++) {
+		if (comments[i]->get_id() == comment_id)
+			return comments[i]->get_user();
+	}
 }

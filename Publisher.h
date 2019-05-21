@@ -16,7 +16,6 @@ public:
 	void add_followers(Customer* user);
 	virtual bool if_follower_exists(int id);
 	virtual float publisher_get_paid();
-	//virtual void view_published_movies(InputVec input_vector);
 	virtual bool reply_comments(int film_id, int comment_id, std::string content);
 	virtual bool delete_comment(int film_id, int comment_id);
 	virtual void notify_followers(Message* message);
@@ -24,9 +23,6 @@ public:
 private:
 	CustomersVector followers;
 	MoviesVector published_movies;
-	
-
-
 };
 #endif 
 

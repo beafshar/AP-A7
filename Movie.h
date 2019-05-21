@@ -8,6 +8,10 @@
 #include<regex>
 #include<sstream>
 #include <iomanip>
+#include<algorithm>
+
+#define START 3
+#define STEP 2
 
 class Comment;
 class Sale;
@@ -49,6 +53,9 @@ public:
 	bool if_movie_was_sold();
 	bool check_if_comment_exists(int id);
 	void view_published_details();
+	static bool compare_by_id(Movie* a, Movie* b);
+	static bool compare_by_rate(Movie* a, Movie* b);
+	int get_comment_user(int comment_id);
 private:
 	InformationMAP movie_information;
 	int film_id;

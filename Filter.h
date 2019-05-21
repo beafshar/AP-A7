@@ -7,7 +7,6 @@
 #include<string>
 #define NOT_VALUED -1
 
-
 class Movie;
 
 typedef std::map<std::string, std::string> InformationMAP;
@@ -25,8 +24,8 @@ public:
 	bool filter_by_max_year(Movie* film);
 	bool filter_by_director(Movie* film);
 	bool filter_by_min_rate(Movie* film);
+	bool check_all_filters(Movie* film);
 	
-
 private:
 	std::string name;
 	float price;
@@ -34,7 +33,6 @@ private:
 	int max_year;
 	std::string director;
 	float min_rate;
-
 };
 
 

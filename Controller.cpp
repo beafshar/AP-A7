@@ -95,10 +95,10 @@ void Controller::detect_POST_command() {
 }
 
 void Controller::detect_films_command() {
-	if (input_line.size() == 2 || input_line.size() == 3)
+	if (input_line.size() == 2 || input_line.size() >= 3 && input_line[3] != "film_id")
 		UT_flix->user_search_movies(input_line);
 	else if(input_line[3].compare("film_id") == 0)
-			UT_flix->view_movie_details(input_line[4]);
+		UT_flix->view_movie_details(input_line[4]);
 	else
 		throw BadRequest();
 }

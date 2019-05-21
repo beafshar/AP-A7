@@ -2,11 +2,11 @@
 #define MESSAGE_H
 
 #include<string>
-
+#define TEMP 1
 
 class Message {
 public:
-	Message(std::string content, bool seen = false);
+	Message(std::string content);
 	void read_message();
 	std::string get_content();
 	bool if_read();
@@ -19,7 +19,7 @@ public:
 		std::string film, int film_id);
 	void create_comment_film_notif(std::string user_name, int user_id,
 		std::string film, int film_id);
-
+	virtual int get_user() { return TEMP; }
 protected:
 	std::string content;
 	bool seen;

@@ -15,11 +15,11 @@ void Sale::pay_to_publisher() {
 }
 
 float Sale::calculate_publisher_share() {
-	if (rate < 5)
+	if (rate < LOW_RATE)
 		return price * 0.8;
-	if (rate >= 5 && rate < 8)
+	if (rate >= LOW_RATE && rate < MEDIUM_RATE)
 		return price * 0.9;
-	if (rate >= 8)
+	if (rate >= MEDIUM_RATE)
 		return price * 0.95;
 }
 

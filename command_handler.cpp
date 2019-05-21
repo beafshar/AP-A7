@@ -6,6 +6,8 @@ CommandHandler::CommandHandler() {
 }
 
 void CommandHandler::parse_input(std::string line) {
+	if (line.compare("") == 0)
+		return;
 	std::istringstream is(line);
 	std::string word;
 	while (is >> word)
@@ -13,9 +15,11 @@ void CommandHandler::parse_input(std::string line) {
 }
 
 void CommandHandler::detect_command_type() {
+	if (input_line.size() == 0)
+		return;
 	controller->set_input(input_line);
 	std::string command = input_line[0];
-	//if (input_line[2] == "?") {
+	if (input_line.size() > 1) {
 		if (command.compare("POST") == 0)
 			controller->detect_POST_command();
 		else if (command.compare("PUT") == 0)
@@ -26,11 +30,10 @@ void CommandHandler::detect_command_type() {
 			controller->detect_DELETE_command();
 		else
 			throw BadRequest();
-	//}
-	//else
-		//throw BadRequest();
+	}
+	else
+		throw BadRequest();
 }
-
 
 void CommandHandler::run() {
 	std::string line;

@@ -23,7 +23,7 @@ void Customer::set_map_keys() {
 bool Customer::signup(InputVec input_vector) {
 	if (check_signup_command_validity(input_vector)) {
 		InformationMAP::iterator it;
-		for (int i = 3; i < input_vector.size() - 1; i += 2) {
+		for (int i = START; i < input_vector.size() - 1; i += STEP) {
 			it = user_information.find(input_vector[i]);
 			if (it != user_information.end()) {
 				user_information[it->first] = input_vector[i + 1];
@@ -39,7 +39,7 @@ bool Customer::signup(InputVec input_vector) {
 }
 
 bool Customer::login(InputVec input_vector) {
-	for (int i = 3; i < input_vector.size(); i += 2) {
+	for (int i = START; i < input_vector.size() - 1; i += STEP) {
 		if (input_vector[i] == "username") {
 			if (input_vector[i + 1].compare(user_information["username"]) != 0)
 				return false;
@@ -74,16 +74,14 @@ void Customer::follow_publisher(Publisher* publisher) {
 		followings.push_back(publisher);
 		publisher->add_followers(this);
 	}
-
 }
-
 
 void Customer::increase_money(float _money) {
 	money += _money;
 }
 
 bool Customer::score_movie(int id, int rate) {
-	if (rate > 10 || rate < 0)
+	if (rate > MAX_RATE || rate < MIN_RATE)
 		throw BadRequest();
 	for (int i = 0; i < bought_movies.size(); i++) {
 		if (bought_movies[i]->get_film_id() == id && 
@@ -97,11 +95,10 @@ bool Customer::score_movie(int id, int rate) {
 }
 
 
-
 bool Customer::check_signup_command_validity(InputVec input_vec) {
-	if (input_vec.size() < 11 || input_vec.size() > 13)
+	if (input_vec.size() < MIN_SIGNUP_SIZE || input_vec.size() > MAX_SIGNUP_SIZE)
 		return false;
-	for (int i = 3; i < input_vec.size(); i++) {
+	for (int i = START; i < input_vec.size(); i++) {
 		if (input_vec[i] == "email")
 			if (check_email_validity(input_vec[i + 1]) == false)
 				return false;
@@ -198,14 +195,13 @@ void Customer::view_bought_movies(InputVec input) {
 	std::cout << "#. Film Id | Film Name | Film Length | ";
 	std::cout << "Film price | Rate | Production Year | Film Director " << std::endl;
 	Filter* filter = new Filter(input);
+	std::sort(bought_movies.begin(), bought_movies.end(), Movie::compare_by_id);
 	for (int i = 0; i < bought_movies.size(); i++) {
-		Movie* m = bought_movies[i];
-		if (bought_movies[i]->if_deleted() == false && filter->filter_by_director(m)
-			&& filter->filter_by_max_year(m) && filter->filter_by_min_year(m) &&
-			filter->filter_by_name(m) && filter->filter_by_price(m)) {
+		if (bought_movies[i]->if_deleted() == false && 
+			filter->check_all_filters(bought_movies[i])) {
 			std::cout << count << ". ";
-			m->view_published_details();
+			bought_movies[i]->view_published_details();
+			count++;
 		}
-		count++;
 	}
 }

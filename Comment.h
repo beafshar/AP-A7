@@ -6,6 +6,7 @@
 #include<map>
 #include<vector>
 #include"Message.h"
+
 typedef std::map<int, std::vector<std::string>> CommentsMap;
 typedef std::pair<int, std::vector<std::string>> ReplyPair;
 

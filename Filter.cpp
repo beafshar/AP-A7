@@ -78,3 +78,8 @@ bool Filter::filter_by_max_year(Movie* film) {
 	else
 		return false;
 }
+
+bool Filter::check_all_filters(Movie* movie) {
+	return filter_by_director(movie) && filter_by_max_year(movie) && filter_by_min_year(movie)
+		&& filter_by_name(movie) && filter_by_price(movie);
+}

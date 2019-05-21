@@ -1,7 +1,7 @@
 #include"Message.h"
 
-Message:: Message(std::string _content, bool _seen){
-	seen = _seen;
+Message:: Message(std::string _content){
+	seen = false;
 	content = _content;
 }
 
@@ -53,6 +53,7 @@ void Message:: create_rate_film_notif(std::string user_name, int user_id,
 void Message:: create_comment_film_notif(std::string user_name, int user_id,
 	std::string film, int film_id) {
 	content = "User " + user_name + " with id " + std::to_string(user_id)
-		+ " comment on your film " + film + " with id " + std::to_string(film_id) + ".";
+		+ " comment on your film " + film + " with id " + std::to_string(film_id)
+		+ ".";
 }
 
