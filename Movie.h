@@ -7,6 +7,7 @@
 #include<string>
 #include<regex>
 #include<sstream>
+#include <iomanip>
 
 class Comment;
 class Sale;
@@ -46,6 +47,7 @@ public:
 	std::string get_director();
 	int get_year();
 	bool if_movie_was_sold();
+	bool check_if_comment_exists(int id);
 private:
 	InformationMAP movie_information;
 	int film_id;

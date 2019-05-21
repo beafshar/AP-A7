@@ -51,7 +51,7 @@ void Controller::detect_GET_command() {
 
 void Controller::detect_PUT_command() {
 	try {
-		std::string command = input_line[2];
+		std::string command = input_line[1];
 		if (command.compare("films") == 0)
 			UT_flix->edit_movie(input_line);
 		else

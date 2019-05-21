@@ -58,13 +58,14 @@ public:
 	void notify_user_has_followed_publisher(int id);
 	//
 	void publisher_views_his_published_movies() {};
-	void print_recommendation_films();
+	void print_recommendation_films(int id);
 	static bool compare_by_id(Movie* a, Movie* b);
 	static bool compare_by_rate(Movie* a, Movie* b);
 	//
 	void user_views_his_bought_movies(InputVec input) {};
 	void pay_to_publisher();
 	bool check_rate_validity(std::string rate);
+	bool check_if_comment_existed(int film_id, int comment_id);
 
 private:
 	CustomersMap UTflix_users;

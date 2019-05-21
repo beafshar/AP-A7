@@ -124,8 +124,12 @@ void UTflix::delete_movie(InputVec input) {
 	if (check_user_type()) {
 		if (input.size() == 5) {
 			int id = std::stoi(find_needed(input, "film_id"));
-			if (active_user->delete_film(id));
+			if (check_if_movie_existed(id)) {
+				if (active_user->delete_film(id));
 				std::cout << "OK" << std::endl;
+			}
+			else
+				throw NotFound();
 		}
 		else
 			throw BadRequest();
@@ -159,7 +163,7 @@ void UTflix::view_movie_details(std::string input) {
 			if (movies[i]->get_film_id() == id &&movies[i]->if_deleted() == false)
 				movies[i]->view_details();
 		}
-		print_recommendation_films();
+		print_recommendation_films(id);
 		return;
 	}
 	throw NotFound();
@@ -190,19 +194,24 @@ Publisher* UTflix::find_publisher(int id) {
 		if (it->first == id)
 			return it->second;
 	}
+	throw NotFound();
 }
 
 void UTflix::comment_on_films(InputVec input) {
 	if (input.size() == 7) {
 		int id = std::stoi(find_needed(input, "film_id"));
 		std::string content = find_needed(input, "content");
-		if (movies[id]->if_user_has_bought(active_user->get_id()) == true) {
-			active_user->comment_on_a_movie(id, content);
-			notify_user_has_submited_comment(movies[id]->get_movie_name(), id);
-			std::cout << "OK" << std::endl;
+		if (check_if_movie_existed(id)) {
+			if (movies[id]->if_user_has_bought(active_user->get_id()) == true) {
+				active_user->comment_on_a_movie(id, content);
+				notify_user_has_submited_comment(movies[id]->get_movie_name(), id);
+				std::cout << "OK" << std::endl;
+			}
+			else
+				throw PermissionDenied();
 		}
 		else
-			throw PermissionDenied();
+			throw NotFound();
 	}
 	else
 		throw BadRequest();
@@ -240,15 +249,19 @@ void UTflix::rate_movie(InputVec input) {
 	if (input.size() == 7) {
 		float score = 0;
 		int id = std::stoi(find_needed(input, "film_id"));
-		if(check_rate_validity(find_needed(input, "score")) && 
-			movies[id]->if_user_has_bought(active_user->get_id()) == true){
-			score = std::stof(find_needed(input, "score"));
-			if (active_user->score_movie(id, score)) {
-				notify_user_has_rated_movie(movies[id]->get_movie_name(), id);
-				std::cout << "OK" << std::endl;
-				return;
+		if (check_if_movie_existed(id)) {
+			if (check_rate_validity(find_needed(input, "score")) &&
+				movies[id]->if_user_has_bought(active_user->get_id()) == true) {
+				score = std::stof(find_needed(input, "score"));
+				if (active_user->score_movie(id, score)) {
+					notify_user_has_rated_movie(movies[id]->get_movie_name(), id);
+					std::cout << "OK" << std::endl;
+					return;
+				}
 			}
 		}
+		else
+			throw NotFound();
 	}
 	throw BadRequest();
 }
@@ -261,7 +274,7 @@ bool UTflix::check_rate_validity(std::string rate) {
 		inputStream >> i;
 		return true;
 	}
-	return false;
+	throw BadRequest();
 }
 
 void UTflix::notify_user_has_rated_movie(std::string film, int film_id) {
@@ -271,16 +284,25 @@ void UTflix::notify_user_has_rated_movie(std::string film, int film_id) {
 	publishers[movies[film_id]->get_publisher_id()]->notify_user(message);
 }
 
+bool UTflix::check_if_comment_existed(int film_id, int comment_id) {
+	if (check_if_movie_existed(film_id))
+		return movies[film_id]->check_if_comment_exists(comment_id);
+}
+
 void UTflix::reply_comment(InputVec input) {
 	if (check_user_type()) {
 		if (input.size() == 9) {
 			int film_id = std::stoi(find_needed(input, "film_id"));
 			int comment_id = std::stoi(find_needed(input, "comment_id"));
 			std::string content = find_needed(input, "content");
-			if (active_user->reply_comments(film_id, comment_id, content)) {
-				notify_publisher_has_replied_comment();
-				std::cout << "OK" << std::endl;
+			if (check_if_comment_existed(film_id, comment_id)) {
+				if (active_user->reply_comments(film_id, comment_id, content)) {
+					notify_publisher_has_replied_comment();
+					std::cout << "OK" << std::endl;
+				}
 			}
+			else
+				throw NotFound();
 		}
 		else
 			throw BadRequest();
@@ -300,8 +322,12 @@ void UTflix::delete_comment(InputVec input) {
 		if (input.size() == 7) {
 			int film_id = std::stoi(find_needed(input, "film_id"));
 			int comment_id = std::stoi(find_needed(input, "comment_id"));
-			if (active_user->delete_comment(film_id, comment_id))
-				std::cout << "OK" << std::endl;
+			if (check_if_comment_existed(film_id, comment_id)) {
+				if (active_user->delete_comment(film_id, comment_id))
+					std::cout << "OK" << std::endl;
+			}
+			else
+				throw NotFound();
 		}
 		else
 			throw BadRequest();
@@ -321,27 +347,35 @@ void UTflix::notify_user_has_bought_movie(std::string film, int film_id) {
 void UTflix::buy_movie(InputVec input) {
 	if (input.size() == 5) {
 		int id = std::stoi(find_needed(input, "film_id"));
-		if (movies[id]->if_user_has_bought(active_user->get_id()) == false && 
-			active_user->buy_movie(movies[id])) {
-			net_money += movies[id]->buy_movie(active_user->get_id());
-			notify_user_has_bought_movie(movies[id]->get_movie_name(), id);
-			std::cout << "OK" << std::endl;
-			return;
+		if (check_if_movie_existed(id)) {
+			if (movies[id]->if_user_has_bought(active_user->get_id()) == false &&
+				active_user->buy_movie(movies[id])) {
+				net_money += movies[id]->buy_movie(active_user->get_id());
+				notify_user_has_bought_movie(movies[id]->get_movie_name(), id);
+				std::cout << "OK" << std::endl;
+				return;
+			}
 		}
+		throw NotFound();
 	}
 	throw BadRequest();
 }
 //check sorts
-void UTflix::print_recommendation_films() {
+void UTflix::print_recommendation_films(int id) {
 	std::cout << "Recommendation Film" << std::endl;
 	std::cout << "#. Film Id | Film Name | Film Length | Film Director " << std::endl;
 	std::sort(movies.begin(), movies.end(), UTflix::compare_by_id);
 	std::sort(movies.begin(), movies.end(), UTflix::compare_by_rate);
-	for (int i = 0; i < 4; i++) {
-		if (active_user->check_if_user_has_bought_movie
-			(movies[i]->get_film_id()) == false) {
-			std::cout << i + 1 << ". ";
+	int count = 1;
+	for (int i = 0; count < 5; i++) {
+		if (i == movies.size())
+			break;
+		if (active_user->check_if_user_has_bought_movie(movies[i]->
+			get_film_id()) == false && movies[i]->get_film_id() != id &&
+			movies[i]->if_deleted() == false) {
+			std::cout << count << ". ";
 			movies[i]->print_recommendation();
+			count++;
 		}
 	}
 }

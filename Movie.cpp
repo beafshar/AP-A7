@@ -2,6 +2,7 @@
 #include"BadRequest.h"
 #include"Comment.h"
 #include"Sale.h"
+#include"NotFound.h"
 
 Movie::Movie(InputVec input_vector , int id, int _publisher_id) {
 	set_map_keys();
@@ -134,7 +135,7 @@ void Movie::view_details() {
 	std::cout << "Length = " << movie_information["length"] << std::endl;
 	std::cout << "Year = " << movie_information["year"] << std::endl;
 	std::cout << "Summary = " << movie_information["summary"] << std::endl;
-	std::cout << "Rate = " << rate << std::endl;
+	std::cout << "Rate = " << std::setprecision(2) <<rate << std::endl;
 	std::cout << "Price = " <<movie_information["price"]<< std::endl;
 	std::cout << std::endl << std::endl;
 	print_comments_and_replies();
@@ -203,4 +204,11 @@ int Movie::get_year() {
 	return std::stoi(movie_information["year"]);
 }
 
+bool Movie::check_if_comment_exists(int id) {
+	for (int i = 0; i < comments.size(); i++) {
+		if (comments[i]->get_id() == id)
+			return true;
+	}
+	throw NotFound();
+}
 
