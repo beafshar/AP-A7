@@ -103,6 +103,7 @@ bool Customer::check_signup_command_validity(InputVec input_vec) {
 			if (check_email_validity(input_vec[i + 1]) == false)
 				return false;
 	}
+	return true;
 }
 
 bool Customer::check_email_validity(std::string email) {

@@ -274,7 +274,7 @@ void UTflix::rate_movie(InputVec input) {
 				movies[id - 1]->if_user_has_bought(active_user->get_id()) == true) {
 				score = std::stof(find_needed(input, "score"));
 				if (active_user->score_movie(id, score)) {
-					notify_user_has_rated_movie(movies[id]->get_movie_name(), id);
+					notify_user_has_rated_movie(movies[id-1]->get_movie_name(), id);
 					std::cout << "OK" << std::endl;
 					return;
 				}
