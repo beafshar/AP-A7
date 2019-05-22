@@ -33,7 +33,7 @@ void UTflix::signup(InputVec input) {
 		if (user->signup(input)) {
 			if (check_if_user_existed(user) == false) {
 				UTflix_users.insert(UserPair(UTflix_users.size()+1, user));
-				add_publishers(user);
+				add_publishers(user,input);
 				set_active_user(user);
 				std::cout << "OK" << std::endl;
 				return;
@@ -43,9 +43,10 @@ void UTflix::signup(InputVec input) {
 	throw BadRequest();
 }
 
-void UTflix::add_publishers(Customer* user) {
+void UTflix::add_publishers(Customer* user, InputVec input) {
 	if (user->get_type() == USER_PUBLISHER) {
 		Publisher* publisher = new Publisher(user->get_id());
+		publisher->signup(input);
 		publishers.insert(PublisherPair(user->get_id(), publisher));
 	}
 }

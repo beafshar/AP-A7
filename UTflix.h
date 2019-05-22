@@ -7,8 +7,6 @@
 #include"command_handler.h"
 #include<map>
 
-#define USER_PUBLISHER 1;
-#define USER_CUSTOMER 2;
 #define NULL_USER -1
 #define LOGIN_SIZE 7
 #define FILM_SIZE 15
@@ -34,7 +32,7 @@ typedef std::pair<int, Publisher*> PublisherPair;
 class UTflix {
 public:
 	UTflix();
-	void add_publishers(Customer* user);
+	void add_publishers(Customer* user, InputVec input);
 	void signup(InputVec input);
 	Publisher* find_publisher(int id);
 	bool check_user_type();
