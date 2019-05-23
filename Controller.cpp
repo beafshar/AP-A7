@@ -9,23 +9,6 @@ void Controller::set_input(InputVec input) {
 	input_line = input;
 }
 
-void Controller::detect_DELETE_command() {
-	try {
-		std::string command = input_line[1];
-		if (command.compare("films") == 0)
-			UT_flix->delete_movie(input_line);
-		else if (command.compare("comments") == 0)
-			UT_flix->delete_comment(input_line);
-		else
-			throw NotFound();
-		input_line.resize(0);
-	}
-	catch (const std::exception& exp) {
-		std::cout << exp.what();
-	}
-
-}
-
 void Controller::detect_GET_command() {
 	try {
 		std::string command = input_line[1];
@@ -39,20 +22,8 @@ void Controller::detect_GET_command() {
 			UT_flix->user_views_his_bought_movies(input_line);
 		else if (command.compare("notifications") == 0)
 			detect_notifucation_command();
-		else
-			throw NotFound();
-		input_line.resize(0);
-	}
-	catch (const std::exception& exp) {
-		std::cout << exp.what();
-	}
-}
-
-void Controller::detect_PUT_command() {
-	try {
-		std::string command = input_line[1];
-		if (command.compare("films") == 0)
-			UT_flix->edit_movie(input_line);
+		else if (command.compare("money") == 0)
+			UT_flix->view_money();
 		else
 			throw NotFound();
 		input_line.resize(0);
@@ -85,6 +56,14 @@ void Controller::detect_POST_command() {
 			UT_flix->rate_movie(input_line);
 		else if (command.compare("comments") == 0)
 			UT_flix->comment_on_films(input_line);
+		else if (command.compare("put_films") == 0)
+			UT_flix->edit_movie(input_line);
+		else if (command.compare("delete_films") == 0)
+			UT_flix->delete_movie(input_line);
+		else if (command.compare("delete_comments") == 0)
+			UT_flix->delete_comment(input_line);
+		else if (command.compare("logout") == 0)
+			UT_flix->logout();
 		else
 			throw NotFound();
 		input_line.resize(0);

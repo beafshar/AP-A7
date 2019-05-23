@@ -20,6 +20,10 @@ void Customer::set_map_keys() {
 	user_information.insert(MapPair("publisher", ""));
 }
 
+void Customer::signup_admin(std::string username, std::string password) {
+	user_information["username"] = username;
+	user_information["password"] = hash_password(password);
+}
 bool Customer::signup(InputVec input_vector) {
 	if (check_signup_command_validity(input_vector)) {
 		InformationMAP::iterator it;
@@ -205,4 +209,8 @@ void Customer::view_bought_movies(InputVec input) {
 			count++;
 		}
 	}
+}
+
+int Customer::get_money() {
+	return money;
 }

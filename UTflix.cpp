@@ -10,11 +10,16 @@
 
 UTflix::UTflix() {
 	net_money = 0;
-	active_user = new Customer(NULL_USER);
+	null_user = new Customer(NULL_USER);
+	active_user = null_user;
+	Customer* admin = new Customer(ADMIN);
+	admin->signup_admin("admin", "admin");
+	UTflix_users.insert(UserPair(ADMIN, admin));
 }
 
+
 void UTflix::login(InputVec input) {
-	if (input.size() == LOGIN_SIZE) {
+	if (input.size() == LOGIN_SIZE && active_user->get_id() == NULL_USER) {
 		CustomersMap::iterator it;
 		for (it = UTflix_users.begin(); it != UTflix_users.end(); it++) {
 			if (it->second->login(input)) {
@@ -27,8 +32,16 @@ void UTflix::login(InputVec input) {
 	throw BadRequest();
 }
 
+void UTflix::logout() {
+	if (active_user->get_id() != NULL_USER)
+		active_user = null_user;
+	else
+		throw BadRequest();
+}
+
 void UTflix::signup(InputVec input) {
-	if (input.size() == MAX_SIGNUP_SIZE || input.size() == MIN_SIGNUP_SIZE) {
+	if (input.size() == MAX_SIGNUP_SIZE || input.size() == MIN_SIGNUP_SIZE &&
+		active_user->get_id() == NULL_USER) {
 		Customer* user = new Customer(UTflix_users.size() + 1);
 		if (user->signup(input)) {
 			if (check_if_user_existed(user) == false) {
@@ -42,6 +55,8 @@ void UTflix::signup(InputVec input) {
 	}
 	throw BadRequest();
 }
+
+
 
 void UTflix::add_publishers(Customer* user, InputVec input) {
 	if (user->get_type() == USER_PUBLISHER) {
@@ -67,18 +82,20 @@ bool UTflix::check_if_user_existed(Customer* user) {
 	return false;
 }
 
-bool UTflix::check_user_type() {
+int UTflix::check_user_type() {
 	if (active_user->get_id() != NULL_USER){
 		if (active_user->get_type() == USER_PUBLISHER)
-			return true;
-		else
-			return false;
+			return USER_PUBLISHER;
+		else if (active_user->get_type() == USER_CUSTOMER)
+			return USER_CUSTOMER;
+		else if(active_user->get_id() == ADMIN)
+			return ADMIN;
 	}
 	throw PermissionDenied();
 }
 
 void UTflix::upload_films(InputVec input) {
-	if (check_user_type()) {
+	if (check_user_type() == USER_PUBLISHER) {
 		if (input.size() == FILM_SIZE) {
 				movies.push_back(active_user->publish_films(input, movies.size()+1));
 				notify_publisher_has_uploaded_a_film();
@@ -106,7 +123,7 @@ bool UTflix::check_if_movie_existed(int id) {
 }
 void UTflix::edit_movie(InputVec input) {
 	int id = 0;
-	if (check_user_type()) {
+	if (check_user_type() == USER_PUBLISHER) {
 		if (input.size() >= MIN_COMMAND_SIZE && input.size() % 2 == 1) {
 			if (check_int_validity(find_needed(input, "film_id")))
 				id = std::stoi(find_needed(input, "film_id"));
@@ -126,7 +143,7 @@ void UTflix::edit_movie(InputVec input) {
 
 void UTflix::delete_movie(InputVec input) {
 	int id = 0;
-	if (check_user_type()) {
+	if (check_user_type() == USER_PUBLISHER) {
 		if (input.size() == MIN_COMMAND_SIZE) {
 			if (check_int_validity(find_needed(input, "film_id")))
 				id = std::stoi(find_needed(input, "film_id"));
@@ -145,7 +162,7 @@ void UTflix::delete_movie(InputVec input) {
 }
 
 void UTflix::get_followers_list() {
-	if (check_user_type()) {
+	if (check_user_type() == USER_PUBLISHER) {
 		active_user->get_followers_list();
 	}
 	else
@@ -154,39 +171,41 @@ void UTflix::get_followers_list() {
 
 void UTflix::increase_user_money(InputVec input) {
 	int money = 0;
-	if (input.size() == MIN_COMMAND_SIZE) {
+	if (input.size() == MIN_COMMAND_SIZE && check_user_type() != ADMIN) {
 		if (check_int_validity(find_needed(input, "amount")))
 			money = std::stoi(find_needed(input, "amount"));
 		active_user->increase_money(money);
 		std::cout << "OK" << std::endl;
 		return;
 		}
-		throw BadRequest();
+	throw BadRequest();
 }
 
 void UTflix::view_movie_details(std::string input) {
 	int id = 0;
 	int flag = 0;
-	if (check_int_validity(input))
-		id = std::stoi(input);
-	if (check_if_movie_existed(id)) {
-		for (int i = 0; i < movies.size(); i++) {
-			if (movies[i]->get_film_id() == id &&movies[i]->if_deleted() == false) {
-				movies[i]->view_details();
-				flag = 1;
+	if (check_user_type() != ADMIN) {
+		if (check_int_validity(input))
+			id = std::stoi(input);
+		if (check_if_movie_existed(id)) {
+			for (int i = 0; i < movies.size(); i++) {
+				if (movies[i]->get_film_id() == id &&movies[i]->if_deleted() == false) {
+					movies[i]->view_details();
+					flag = 1;
+				}
 			}
+			if (flag)
+				print_recommendation_films(id);
+			return;
 		}
-		if(flag)
-			print_recommendation_films(id);
-		return;
+		throw NotFound();
 	}
-	throw NotFound();
 }
 
 
 void UTflix::follow_publisher(InputVec input) {
 	int id = 0;
-	if (input.size() == MIN_COMMAND_SIZE) {
+	if (input.size() == MIN_COMMAND_SIZE && check_user_type() != ADMIN) {
 		if (check_int_validity(find_needed(input, "user_id")))
 			 id = std::stoi(find_needed(input, "user_id"));
 		active_user->follow_publisher(find_publisher(id));
@@ -215,21 +234,23 @@ Publisher* UTflix::find_publisher(int id) {
 
 void UTflix::comment_on_films(InputVec input) {
 	int id = 0;
-	if (input.size() == COMMENTS_SIZE) {
-		if (check_int_validity(find_needed(input, "film_id")))
-			id = std::stoi(find_needed(input, "film_id"));
-		std::string content = find_needed(input, "content");
-		if (check_if_movie_existed(id)) {
-			if (movies[id -1]->if_user_has_bought(active_user->get_id()) == true) {
-				active_user->comment_on_a_movie(id, content);
-				notify_user_has_submited_comment(movies[id - 1]->get_movie_name(), id);
-				std::cout << "OK" << std::endl;
+	if(check_user_type() != ADMIN){
+		if (input.size() == COMMENTS_SIZE) {
+			if (check_int_validity(find_needed(input, "film_id")))
+				id = std::stoi(find_needed(input, "film_id"));
+			std::string content = find_needed(input, "content");
+			if (check_if_movie_existed(id)) {
+				if (movies[id - 1]->if_user_has_bought(active_user->get_id()) == true) {
+					active_user->comment_on_a_movie(id, content);
+					notify_user_has_submited_comment(movies[id - 1]->get_movie_name(), id);
+					std::cout << "OK" << std::endl;
+				}
+				else
+					throw PermissionDenied();
 			}
 			else
-				throw PermissionDenied();
+				throw NotFound();
 		}
-		else
-			throw NotFound();
 	}
 	else
 		throw BadRequest();
@@ -251,7 +272,8 @@ std::string UTflix::find_needed(InputVec input, std::string need) {
 }
 
 void UTflix::view_all_notification(InputVec input) {
-	if (input.size() == ALL_NOTIF_SIZE && input[4] == "limit") {
+	if (input.size() == ALL_NOTIF_SIZE && input[4] == "limit"
+		&& check_user_type() != ADMIN) {
 		int limit = std::stoi(input[5]);
 		active_user->get_all_notification(limit);
 	}
@@ -265,7 +287,7 @@ void UTflix::view_unread_notification() {
 
 void UTflix::rate_movie(InputVec input) {
 	int id = 0;
-	if (input.size() == RATE_SIZE) {
+	if (input.size() == RATE_SIZE && check_user_type() != ADMIN) {
 		float score = 0;
 		if (check_int_validity(find_needed(input, "film_id")))
 			id = std::stoi(find_needed(input, "film_id"));
@@ -314,7 +336,7 @@ bool UTflix::check_if_comment_existed(int film_id, int comment_id) {
 void UTflix::reply_comment(InputVec input) {
 	int film_id = 0;
 	int comment_id = 0;
-	if (check_user_type()) {
+	if (check_user_type() == USER_PUBLISHER) {
 		if (input.size() == REPLY_SIZE) {
 			if (check_int_validity(find_needed(input, "film_id")) &&
 				check_int_validity(find_needed(input, "comment_id"))) {
@@ -347,7 +369,7 @@ void UTflix::notify_publisher_has_replied_comment(int film_id, int comment_id) {
 
 void UTflix::delete_comment(InputVec input) {
 	int film_id = 0;
-	if (check_user_type()) {
+	if (check_user_type() == USER_PUBLISHER) {
 		if (input.size() == DELETE_SIZE) {
 			if(check_int_validity(find_needed(input, "film_id")))
 				film_id = std::stoi(find_needed(input, "film_id"));
@@ -376,7 +398,7 @@ void UTflix::notify_user_has_bought_movie(std::string film, int film_id) {
 
 void UTflix::buy_movie(InputVec input) {
 	int id = 0;
-	if (input.size() == MIN_COMMAND_SIZE) {
+	if (input.size() == MIN_COMMAND_SIZE && check_user_type() != ADMIN) {
 		if (check_int_validity(find_needed(input, "film_id")))
 			id = std::stoi(find_needed(input, "film_id"));
 		if (check_if_movie_existed(id)) {
@@ -414,7 +436,7 @@ void UTflix::print_recommendation_films(int id) {
 
 
 void UTflix::pay_to_publisher() {
-	if (check_user_type()) {
+	if (check_user_type() == USER_PUBLISHER) {
 		net_money -= active_user->publisher_get_paid();
 		std::cout << "OK" << std::endl;
 	}
@@ -423,7 +445,7 @@ void UTflix::pay_to_publisher() {
 }
 
 void UTflix::publisher_views_his_published_movies(InputVec input) {
-	if (check_user_type()) {
+	if (check_user_type() == USER_PUBLISHER) {
 		if (input.size() % 2 == 1 || input.size() == 2)
 			active_user->get_published_movies(input);
 		else
@@ -434,12 +456,14 @@ void UTflix::publisher_views_his_published_movies(InputVec input) {
 }
 
 void UTflix::user_search_movies(InputVec input) {
-	if (input.size() % 2 == 1 || input.size() == 2)
+	if (input.size() % 2 == 1 || input.size() == 2 && 
+		check_user_type() != ADMIN)
 		view_filtered_movies(input);
 	else
 		throw BadRequest();
 }
 void UTflix::view_filtered_movies(InputVec input) {
+	if (check_user_type() != ADMIN) {
 		int count = 1;
 		std::cout << "#. Film Id | Film Name | Film Length | ";
 		std::cout << "Film price | Rate | Production Year | Film Director " << std::endl;
@@ -451,12 +475,23 @@ void UTflix::view_filtered_movies(InputVec input) {
 				movies[i]->view_published_details();
 				count++;
 			}
-		}	
+		}
+	}
+	else
+		throw BadRequest();
 }
 
 void UTflix::user_views_his_bought_movies(InputVec input) {
-		if (input.size() % 2 == 1 || input.size() == 2)
+		if (input.size() % 2 == 1 || input.size() == 2 
+			&& check_user_type() != ADMIN)
 			active_user->view_bought_movies(input);
 		else
 			throw BadRequest();
+}
+
+void UTflix::view_money() {
+	if (check_user_type() == ADMIN)
+		std::cout << net_money << std::endl;
+	else
+		std::cout<< active_user->get_money() << std::endl;
 }

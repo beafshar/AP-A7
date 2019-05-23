@@ -54,6 +54,7 @@ public:
 	std::string get_username();
 	int get_type();
 	int get_id();
+	int get_money();
 	void print_followers_information();
 	bool buy_movie(Movie* movie);
 	bool check_if_user_has_bought_movie(int id);
@@ -68,6 +69,7 @@ public:
 	virtual bool if_follower_exists(int id) { return TEMP; }
 	virtual void get_published_movies(InputVec input) {};
 	void view_bought_movies(InputVec input);
+	void signup_admin(std::string username, std::string password);
 protected:
 	InformationMAP user_information;
 	MessageVec notification;

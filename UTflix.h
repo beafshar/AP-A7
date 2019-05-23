@@ -17,6 +17,7 @@
 #define REPLY_SIZE 9
 #define DELETE_SIZE 7
 #define TOP4 5
+#define ADMIN -2
 
 class Customer;
 class Movie;
@@ -35,7 +36,7 @@ public:
 	void add_publishers(Customer* user, InputVec input);
 	void signup(InputVec input);
 	Publisher* find_publisher(int id);
-	bool check_user_type();
+	int check_user_type();
 	void upload_films(InputVec input);
 	void login(InputVec input);
 	void edit_movie(InputVec input);
@@ -69,12 +70,16 @@ public:
 	bool check_if_comment_existed(int film_id, int comment_id);
 	void user_search_movies(InputVec input);
 	void view_filtered_movies(InputVec input);
+	void logout();
+	void view_money();
 
 private:
 	CustomersMap UTflix_users;
 	PublishersMap publishers;
 	Customer* active_user;
 	MovieVec movies;
-	float net_money;
+	int net_money;
+	Customer* null_user;
+
 };
 #endif 

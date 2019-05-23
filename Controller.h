@@ -15,8 +15,6 @@ public:
 	Controller();
 	void set_input(InputVec line);
 	void detect_POST_command();
-	void detect_PUT_command();
-	void detect_DELETE_command();
 	void detect_GET_command();
 	void detect_films_command();
 	void detect_notifucation_command();
