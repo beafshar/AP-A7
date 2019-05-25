@@ -244,5 +244,5 @@ int Movie::get_weight() {
 }
 
 bool Movie::compare_by_weight(Movie* a, Movie* b) {
-	return a->get_weight() < b->get_weight();
+	return a->get_weight() > b->get_weight();
 }

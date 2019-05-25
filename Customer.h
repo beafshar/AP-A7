@@ -25,6 +25,7 @@ class Message;
 class Movie;
 class Publisher;
 class Customer;
+class RecommenderSystem;
 
 typedef std::vector<std::string> InputVec;
 typedef std::map<std::string, std::string> InformationMAP;
@@ -56,7 +57,7 @@ public:
 	int get_id();
 	int get_money();
 	void print_followers_information();
-	bool buy_movie(Movie* movie);
+	bool buy_movie(Movie* movie, RecommenderSystem* recommender);
 	bool check_if_user_has_bought_movie(int id);
 	virtual float publisher_get_paid() { return TEMP; };
 	virtual Movie* publish_films(InputVec input_vector, int id) { return NULL; };
@@ -70,7 +71,7 @@ public:
 	virtual void get_published_movies(InputVec input) {};
 	void view_bought_movies(InputVec input);
 	void signup_admin(std::string username, std::string password);
-	void add_movies_weight();
+	void add_movies_weight(int id,RecommenderSystem* recommender);
 protected:
 	InformationMAP user_information;
 	MessageVec notification;

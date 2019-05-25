@@ -4,6 +4,7 @@
 #include"Movie.h"
 #include"Message.h"
 #include"Filter.h"
+#include"Recommender_System.h"
 
 Customer::Customer(int id) {
 	user_type = USER_CUSTOMER;
@@ -129,9 +130,8 @@ bool Customer::comment_on_a_movie(int film_id, std::string content) {
 			bought_movies[i]->submit_comment(content ,user_id);
 			return true;
 		}
-		else
-			throw BadRequest();
 	}
+	throw BadRequest();
 }
 
 void Customer::get_unread_notifications() {
@@ -178,9 +178,9 @@ void Customer::print_followers_information() {
 	std::cout << " | " << user_information["email"] << std::endl;
 }
 
-bool Customer::buy_movie(Movie* movie) {
+bool Customer::buy_movie(Movie* movie, RecommenderSystem* recommender) {
 	if (money >= movie->get_price()) {
-		add_movies_weight();
+		add_movies_weight(movie->get_film_id(),recommender);
 		bought_movies.push_back(movie);
 		money -= movie->get_price();
 		return true;
@@ -215,8 +215,8 @@ int Customer::get_money() {
 	return money;
 }
 
-void Customer::add_movies_weight() {
+void Customer::add_movies_weight(int id,RecommenderSystem* recommender) {
 	for (int i = 0; i < bought_movies.size(); i++) {
-		bought_movies[i]->add_weight();
+		recommender->fill_matrix(id, bought_movies[i]->get_film_id());
 	}
 }

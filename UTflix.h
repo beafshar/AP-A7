@@ -31,6 +31,7 @@ typedef std::vector<std::string> InputVec;
 typedef std::pair<int, Customer*> UserPair;
 typedef std::pair<int, Publisher*> PublisherPair;
 
+
 class UTflix {
 public:
 	UTflix();

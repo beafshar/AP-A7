@@ -1,10 +1,10 @@
-all: a.out
+all: A7.out
 
-a.out: main.o UTflix.o command_handler.o Controller.o Customer.o Publisher.o Movie.o Filter.o Sale.o Message.o Comment.o NotFound.o PermissionDenied.o BadRequest.o
-	g++ main.o UTflix.o command_handler.o Controller.o Customer.o Publisher.o Movie.o Filter.o Sale.o Message.o Comment.o NotFound.o PermissionDenied.o BadRequest.o
-main.o: main.cpp UTflix.h
+A7.out: main.o UTflix.o command_handler.o Controller.o Customer.o Publisher.o Recommender_System.o Movie.o Filter.o Sale.o Message.o Comment.o NotFound.o PermissionDenied.o BadRequest.o
+	g++ -std=c++11 main.o UTflix.o command_handler.o Controller.o Customer.o Publisher.o Recommender_System.o Movie.o Filter.o Sale.o Message.o Comment.o NotFound.o PermissionDenied.o BadRequest.o
+main.o: main.cpp command_handler.h
 		g++ -std=c++11 -c main.cpp
-UTflix.o: UTflix.cpp UTflix.h command_handler.h Message.h Filter.h
+UTflix.o: UTflix.cpp UTflix.h command_handler.h Message.h Filter.h Customer.h Publisher.h Recommender_System.h
 		g++ -std=c++11 -c UTflix.cpp
 command_handler.o: command_handler.cpp command_handler.h Controller.h
 		g++ -std=c++11 -c command_handler.cpp
@@ -14,6 +14,8 @@ Customer.o: Customer.cpp Customer.h Publisher.h Movie.h Message.h Filter.h
 		g++ -std=c++11 -c Customer.cpp
 Publisher.o: Publisher.cpp Publisher.h Movie.h Customer.h Message.h Filter.h
 		g++ -std=c++11 -c Publisher.cpp
+Recommender_System.o: Recommender_System.cpp Recommender_System.h Movie.h
+		g++ -std=c++11 -c Recommender_System.cpp
 Movie.o: Movie.cpp Movie.h Comment.h
 		g++ -std=c++11 -c Movie.cpp
 Sale.o: Sale.cpp Sale.h
