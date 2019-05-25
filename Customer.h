@@ -70,6 +70,7 @@ public:
 	virtual void get_published_movies(InputVec input) {};
 	void view_bought_movies(InputVec input);
 	void signup_admin(std::string username, std::string password);
+	void add_movies_weight();
 protected:
 	InformationMAP user_information;
 	MessageVec notification;

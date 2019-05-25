@@ -180,6 +180,7 @@ void Customer::print_followers_information() {
 
 bool Customer::buy_movie(Movie* movie) {
 	if (money >= movie->get_price()) {
+		add_movies_weight();
 		bought_movies.push_back(movie);
 		money -= movie->get_price();
 		return true;
@@ -202,8 +203,7 @@ void Customer::view_bought_movies(InputVec input) {
 	Filter* filter = new Filter(input);
 	std::sort(bought_movies.begin(), bought_movies.end(), Movie::compare_by_id);
 	for (int i = 0; i < bought_movies.size(); i++) {
-		if (bought_movies[i]->if_deleted() == false && 
-			filter->check_all_filters(bought_movies[i])) {
+		if (filter->check_all_filters(bought_movies[i])) {
 			std::cout << count << ". ";
 			bought_movies[i]->view_published_details();
 			count++;
@@ -213,4 +213,10 @@ void Customer::view_bought_movies(InputVec input) {
 
 int Customer::get_money() {
 	return money;
+}
+
+void Customer::add_movies_weight() {
+	for (int i = 0; i < bought_movies.size(); i++) {
+		bought_movies[i]->add_weight();
+	}
 }

@@ -7,6 +7,7 @@
 #include"Message.h"
 #include"NotFound.h"
 #include"Filter.h"
+#include"Recommender_System.h"
 
 UTflix::UTflix() {
 	net_money = 0;
@@ -15,6 +16,7 @@ UTflix::UTflix() {
 	Customer* admin = new Customer(ADMIN);
 	admin->signup_admin("admin", "admin");
 	UTflix_users.insert(UserPair(ADMIN, admin));
+	recommender = new RecommenderSystem();
 }
 
 
@@ -33,8 +35,10 @@ void UTflix::login(InputVec input) {
 }
 
 void UTflix::logout() {
-	if (active_user->get_id() != NULL_USER)
+	if (active_user->get_id() != NULL_USER) {
 		active_user = null_user;
+		std::cout << "OK" << std::endl;
+	}
 	else
 		throw BadRequest();
 }
@@ -68,7 +72,7 @@ void UTflix::add_publishers(Customer* user, InputVec input) {
 
 void UTflix::set_active_user(Customer* user) {
 	active_user = user;
-	if (check_user_type()) {
+	if (check_user_type() == USER_PUBLISHER) {
 		active_user = publishers[user->get_id()];
 	}
 }
@@ -99,6 +103,7 @@ void UTflix::upload_films(InputVec input) {
 		if (input.size() == FILM_SIZE) {
 				movies.push_back(active_user->publish_films(input, movies.size()+1));
 				notify_publisher_has_uploaded_a_film();
+				recommender->expand_matrix(movies[movies.size() - 1]);
 				std::cout << "OK" << std::endl;                                  
 		}
 		else
@@ -418,17 +423,16 @@ void UTflix::buy_movie(InputVec input) {
 void UTflix::print_recommendation_films(int id) {
 	std::cout << "Recommendation Film" << std::endl;
 	std::cout << "#. Film Id | Film Name | Film Length | Film Director " << std::endl;
-	std::sort(movies.begin(), movies.end(), Movie::compare_by_id);
-	std::sort(movies.begin(), movies.end(), Movie::compare_by_rate);
+	MovieVec top_movies = recommender->recommend_movies(id);
 	int count = 1;
 	for (int i = 0; count < TOP4; i++) {
-		if (i == movies.size())
+		if (i == top_movies.size())
 			break;
-		if (active_user->check_if_user_has_bought_movie(movies[i]->
-			get_film_id()) == false && movies[i]->get_film_id() != id &&
-			movies[i]->if_deleted() == false) {
+		if (active_user->check_if_user_has_bought_movie(top_movies[i]->
+			get_film_id()) == false && top_movies[i]->get_film_id() != id
+			&& top_movies[i]->if_deleted() == false) {
 			std::cout << count << ". ";
-			movies[i]->print_recommendation();
+			top_movies[i]->print_recommendation();
 			count++;
 		}
 	}

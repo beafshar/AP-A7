@@ -13,6 +13,7 @@ Movie::Movie(InputVec input_vector , int id, int _publisher_id) {
 	price = std::stoi(movie_information["price"]);
 	film_id = id;
 	rate = 0;
+	weight = 0;
 }
 
 bool Movie::if_movie_was_sold() {
@@ -232,4 +233,16 @@ int Movie::get_comment_user(int comment_id) {
 		if (comments[i]->get_id() == comment_id)
 			return comments[i]->get_user();
 	}
+}
+
+void Movie::add_weight() {
+	weight++;
+}
+
+int Movie::get_weight() {
+	return weight;
+}
+
+bool Movie::compare_by_weight(Movie* a, Movie* b) {
+	return a->get_weight() < b->get_weight();
 }

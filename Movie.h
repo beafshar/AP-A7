@@ -55,7 +55,11 @@ public:
 	void view_published_details();
 	static bool compare_by_id(Movie* a, Movie* b);
 	static bool compare_by_rate(Movie* a, Movie* b);
+	static bool compare_by_weight(Movie* a, Movie* b);
 	int get_comment_user(int comment_id);
+	void add_weight();
+	int get_weight();
+
 private:
 	InformationMAP movie_information;
 	int film_id;
@@ -67,6 +71,7 @@ private:
 	float rate;
 	CommentsVector comments;
 	SalesVector sold_movies;
+	int weight;
 
 };
 #endif 

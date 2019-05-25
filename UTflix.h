@@ -22,6 +22,7 @@
 class Customer;
 class Movie;
 class Publisher;
+class RecommenderSystem;
 
 typedef std::map<int, Publisher*> PublishersMap;
 typedef std::map<int,Customer*> CustomersMap;
@@ -80,6 +81,7 @@ private:
 	MovieVec movies;
 	int net_money;
 	Customer* null_user;
+	RecommenderSystem* recommender;
 
 };
 #endif 
