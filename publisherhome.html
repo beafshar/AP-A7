@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+         body {
+        font-family: "Arial";
+        background-image: url("/publisher");
+        background-attachment: fixed;
+        background-size: cover;
+        text-align: center;
+        margin:0;
+    }
+     a:link:not(#film), a:visited:not(#film) {
+        font-family: "Arial";
+        background-color: rgb(61, 96, 56);
+        color: white;
+        padding: 30px 40px;
+        text-align: center;
+        text-decoration: none;
+        font-size: 16px;
+        display: inline-block;
+        bottom: 250px;
+        left:100px;
+    }
+
+    a:hover:not(#film), a:active:not(#film) {
+        background-color: red;
+        bottom: 250px;
+        left:100px;
+    }
+     a#film {
+        font-family: "Arial";
+        color: white;
+        text-align: center;
+        text-decoration: none;
+        font-size: 16px;
+        display: inline-block;
+    }
+
+    hover#film, a:active#film, a:visited#film {
+        color:red;
+        text-decoration: underline;
+
+    }
+    input[type=text] {
+            width: 100%;
+            box-sizing: border-box;
+            border: 2px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+            background-color: white;
+            background-image: url('/filter');
+            background-size: 28px;
+            background-position: 10px 10px;
+            background-repeat: no-repeat;
+            padding: 10px 10px 12px 40px;
+        }
+        .filter_div {
+        width: 18%;
+        position:absolute;
+        left:280px;
+        top:30px;
+        border-radius: 5px;
+        display: inline-block;
+        background-color: rgba(61, 96, 56,0.65);
+        padding: 15px;
+        margin : auto;
+        font-family: "Arial";
+        font-size: 32px;
+        color: white;
+    }
+
+    .button {
+        background-color: rgb(61, 96, 56);
+        border: none;
+        color: white;
+        padding: 15px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+    }
+
+    .button:hover {
+        background-color: red;
+    }
+
+    .logout_div{
+        width: 10%;
+        position:absolute;
+        left:10px;
+        top:350px;
+        border-radius: 5px;
+        display: inline-block;
+        padding: 15px;
+        margin : auto;
+    }
+    .films_div{
+        width: 10%;
+        position:absolute;
+        left:10px;
+        top:220px;
+        border-radius: 5px;
+        display: inline-block;
+        padding: 15px;
+        margin : auto;
+    }
+    .table1_div{
+        width: 50%;
+        position:absolute;
+        right:20px;
+        top:30px;
+        border-radius: 5px;
+        display: inline-block;
+        background-color: rgba(61, 96, 56,0.65);
+        padding: 15px;
+        margin : auto;
+
+    }
+    table {
+  width:100%;
+}
+table, th, td {
+  border: 1px ;
+  border-collapse: collapse;
+}
+th, td {
+  padding: 15px;
+  text-align: left;
+}
+
+table#t01 th {
+  background-color: rgb(61, 96, 56);
+  color: white;
+}
+table#t01 td {
+  color: white;
+}
+    </style>
+</head>
+<body>
+
+    <div class="filter_div">
+        <form action="/money" method="post">
+            <input type="text" name="director" placeholder="Filter by director">
+            <button class="button" type="submit">Filter</button> <br>
+        </form>
+    </div>
+    <div class="logout_div">
+        <a href="/loggedout">Logout</a>
+    </div>
+    <div class="films_div">
+        <a href="/publish_films">Publish Films</a>
+    </div>
+
+    <div class="table1_div">
+        <table id="t01">
+            <tr>
+                <th>Name</th>
+                <th>Rate</th>
+                <th>Price</th>
+                <th>Lenght</th>
+                <th>Year</th>
+                <th>Director</th>
+                <th>Options</th>
+            </tr>
+            <tr>
+                <td><a id="film" href="/film_details">Name</a> </td>
+                <td>10</td>
+                <td>50</td>
+                <td>90</td>
+                <td>2000</td>
+                <td>Jackson</td>
+                <td><a id="film" href="/rate"></a><button class="button" type="submit">Delete</button></td>
+            </tr>
+            <tr>
+                <td><a id="film" href="/film_details">Name</a> </td>
+                <td>10</td>
+                <td>50</td>
+                <td>90</td>
+                <td>2000</td>
+                <td>Jackson</td>
+                <td><button class="button" type="submit">Delete</button></td>
+            </tr>
+            <tr>
+                <td><a id="film" href="/film_details">Name</a> </td>
+                <td>10</td>
+                <td>50</td>
+                <td>90</td>
+                <td>2000</td>
+                <td>Jackson</td>
+                <td><button class="button" type="submit">Delete</button></td>
+            </tr>
+        </table>
+    </div>
+</body>
+</html>

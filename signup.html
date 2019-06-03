@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+    <style>
+    body {
+        font-family: "Arial";
+        background-image: url("/signup");
+        background-attachment: fixed;
+        background-size: cover;
+        text-align: center;
+        margin:0;
+    }
+    a:link, a:visited {
+		font-family: "Arial";
+		background-color: rgb(61, 96, 56);
+		color: white;
+		padding: 30px 40px;
+        text-align: center;
+		text-decoration: none;
+		display: inline-block;
+
+	}
+
+    a:hover, a:active {
+            background-color: red;
+        }
+    ul {
+		    list-style-type: none;
+		    margin: 0;
+		    padding: 0;
+		    overflow: hidden;
+		    position: fixed;
+		    width: 100%;
+            bottom:100px;
+            right:100px;
+		}
+
+		li {
+
+		}
+
+		li a:not(#logo) {
+		    display: block;
+		    color: white;
+		    text-align: center;
+		    padding: 20px 16px;
+		    text-decoration: none;
+		}
+
+		li a:hover:not(.active):not(#logo) {
+		}
+    input[type=text],[type=password] {
+        width: 75%;
+        padding: 12px 20px;
+        margin: 8px 0;
+        display: inline-block;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+    }
+
+    .button {
+        background-color: rgb(61, 96, 56);
+        border: none;
+        color: white;
+        padding: 15px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+    }
+
+    .button:hover {
+        background-color: red;
+    }
+
+    .signup_div {
+        width: 28%;
+        height: 450px;
+        position:absolute;
+        right:140px;
+        top:40px;
+        border-radius: 5px;
+        display: inline-block;
+        background-color: rgba(61, 96, 56,0.65);
+        padding: 15px;
+        margin : auto;
+    }
+
+
+    .loginp {
+        font-family: "Arial";
+        font-size: 32px;
+        color: white;
+    }
+
+    </style>
+    </head>
+
+    <body>
+
+    <br> <br>
+    <a style ="float:left" href="/login_page"> login</a>
+    <div class="signup_div">
+
+    <form action="/signup" method="post">
+        <p class="loginp"> Signup </p>
+        <input name="username" type="text" placeholder="Username" /> <br>
+        <input name="age" type="text" placeholder="age" /> <br>
+        <input name="email" type="text" placeholder="email" /> <br>
+        <input name="password" type="password" placeholder="Password" /> <br>
+        <input name="password" type="password" placeholder="Repeat Password" /> <br><br>
+        <input name="publisher" type="checkbox" /> Publisher<br><br>
+        <button class="button" type="submit" >Signup</button> <br>
+    </form>
+    </div>
+
+
+    </body>
+
+</html>

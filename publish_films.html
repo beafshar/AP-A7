@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            font-family: "Arial";
+            background-image: url("/publishFilmImage");
+            background-attachment: fixed;
+            background-size: cover;
+            text-align: center;
+            margin: 0;
+        }
+
+        a:link, a:visited {
+            font-family: "Arial";
+            background-color: rgb(61, 96, 56);
+            color: white;
+            padding: 30px 40px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        a:hover, a:active {
+            background-color: red;
+        }
+
+        ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            position: fixed;
+            width: 100%;
+            bottom: 100px;
+            right: 100px;
+        }
+
+        li {
+        }
+
+            li a:not(#logo) {
+                display: block;
+                color: white;
+                text-align: center;
+                padding: 20px 16px;
+                text-decoration: none;
+            }
+
+            li a:hover:not(.active):not(#logo) {
+            }
+
+        input[type=text] {
+            width: 75%;
+            padding: 12px 20px;
+            margin: 8px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        .button {
+            background-color: rgb(61, 96, 56);
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+        }
+
+            .button:hover {
+                background-color: red;
+            }
+
+        .film_div {
+            width: 28%;
+            position: absolute;
+            right: 140px;
+            top: 40px;
+            border-radius: 5px;
+            display: inline-block;
+            background-color: rgba(61, 96, 56,0.65);
+            padding: 15px;
+            margin: auto;
+        }
+
+
+        .publish {
+            font-family: "Arial";
+            font-size: 32px;
+            color: white;
+        }
+         .logout_div{
+        width: 10%;
+        height: 50px;
+        position:absolute;
+        border-radius: 5px;
+        display: inline-block;
+        padding: 15px;
+        margin : auto;
+    }
+    </style>
+</head>
+<body>
+
+    <br> <br>
+    <a style="float:left" href="/home"> Home</a>
+    <br> <br> <br> <br> <br> <br> <br>
+    <a style="float:left" href="/loggedout">Logout</a>
+    <div class="film_div">
+        <form action="/publisherhome" method="post">
+            <p class="publish"> Publish Films</p>
+            <input name="name" type="text" placeholder="name" /> <br>
+            <input name="lenght" type="text" placeholder="lenght" /> <br>
+            <input name="year" type="text" placeholder="year" /> <br>
+            <input name="director" type="text" placeholder="director" /> <br>
+            <input name="price" type="text" placeholder="price" /> <br>
+            <input name="summary" type="text" placeholder="summary" /> <br><br>
+            <button class="button" type="submit">Publish</button> <br>
+        </form>
+    </div>
+
+
+</body>
+</html>
