@@ -5,23 +5,15 @@
 #include<string>
 #include"BadRequest.h"
 #include"NotFound.h"
+#include "../server/server.hpp"
 
 class UTflix;
 
-typedef std::vector<std::string> InputVec;
-
-class Controller {
+class Controller :public RequestHandler {
 public:
-	Controller();
-	void set_input(InputVec line);
-	void detect_POST_command();
-	void detect_GET_command();
-	void detect_films_command();
-	void detect_notifucation_command();
-	void detect_money_command();
+  Controller();
 
-private:
-	InputVec input_line;
+protected:
 	UTflix* UT_flix;
 };
-#endif 
+#endif
