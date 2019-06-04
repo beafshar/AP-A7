@@ -38,7 +38,7 @@ Response *PublishFilmsHandler::callback(Request *req) {
   return res;
 }
 Response *DeleteFilmsHandler::callback(Request *req) {
-  string film_id = req->getBodyParam("film_id");
+  string film_id = req->getQueryParam("film_id");
   int user_id = stoi(req->getSessionId());
   UT_flix->delete_movie(film_id, user_id);
   Response *res = Response::redirect("/publisherhome");
@@ -53,17 +53,23 @@ Response *RateFilmHandler::callback(Request *req) {
   return res;
 }
 Response *BuyFilmHandler::callback(Request *req) {
-  string film_id = req->getBodyParam("film_id");
+  string film_id = req->getQueryParam("film_id");
   int user_id = stoi(req->getSessionId());
   UT_flix->buy_movie(film_id, user_id);
   Response *res = Response::redirect("/userhome");
   return res;
 }
-// Response *FilmDetailsHandler::callback(Request *req) {
-//
-// }
+Response *FilmDetailsHandler::callback(Request *req) {
+  int film_id = stoi(req->getQueryParam("film_id"));
+  int user_id = stoi(req->getSessionId());
+  Response *res = new Response;
+  res->setHeader("Content-Type","text/html");
+  res->setBody(UT_flix->view_movie_details(film_id,user_id));
+  return res;
+
+}
 Response *IncreaseMoneyHandler::callback(Request *req) {
-  std::string amount = req->getBodyParam("amount");
+  std::string amount = req->getQueryParam("amount");
   int user_id = stoi(req->getSessionId());
   UT_flix->increase_user_money(amount, user_id);
   Response *res = Response::redirect("/userhome");
@@ -72,7 +78,7 @@ Response *IncreaseMoneyHandler::callback(Request *req) {
 
 Response *PublisherHandler::callback(Request *req) {
   int user_id = stoi(req->getSessionId());
-  Response *res = new Response;
+  Response *res = new Response();
   res->setHeader("Content-Type","text/html");
   res->setBody(UT_flix->publisher_views_his_published_movies(req,user_id));
   return res;

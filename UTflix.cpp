@@ -1,7 +1,6 @@
 #include"UTflix.h"
 #include"Customer.h"
 // #include"BadRequest.h"
-// #include"PermissionDenied.h"
 #include"Publisher.h"
 #include"Movie.h"
 // #include"Message.h"
@@ -79,9 +78,8 @@ int UTflix::check_user_type(int id) {
 }
 
 void UTflix::upload_films(Request *req,int id) {
-		movies.push_back(publishers[id]->publish_films(req, movies.size()+1));
-    std::cout<<movies[1]->get_year()<<std::endl;
-		recommender->expand_matrix();
+	movies.push_back(publishers[id]->publish_films(req, movies.size()+1));
+	recommender->expand_matrix();
 }
 
 bool UTflix::check_if_movie_existed(int id) {
@@ -150,8 +148,6 @@ void UTflix::rate_movie(std::string film_id, std::string rate, int user_id) {
 	if (check_if_movie_existed(id)) {
 			if (movies[id - 1]->if_user_has_bought(user_id)== true)
 				UTflix_users[user_id]->score_movie(id, score);
-			// else
-			// 	throw PermissionDenied();
 		}
 	// else
 	// 	throw NotFound();
@@ -175,10 +171,3 @@ void UTflix::buy_movie(std::string film_id, int user_id) {
 		}
 		// throw NotFound();
 }
-
-/*
-
-
-
-
-*/

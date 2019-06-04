@@ -27,9 +27,9 @@ int main(int argc, char **argv) {
     server.get("/profile", new ProfileHandler());
     server.get("/publisherhome", new PublisherHandler());
     server.get("/rate", new RateFilmHandler());
-    server.get("/buy", new BuyFilmHandler());
+    server.get("/buy_movie", new BuyFilmHandler());
     server.get("/delete", new DeleteFilmsHandler());
-    server.get("/money", new IncreaseMoneyHandler());
+    server.get("/increase_money", new IncreaseMoneyHandler());
     server.get("/signup_page", new ShowPage("htmlFiles/signup.html"));
     server.post("/signup", new SignupHandler());
     server.get("/login_page", new ShowPage("htmlFiles/login.html"));
@@ -38,8 +38,7 @@ int main(int argc, char **argv) {
     server.get("/loggedin", new ShowPage("htmlFiles/loggedin.html"));
     server.get("/publish_films", new ShowPage("htmlFiles/publish_films.html"));
     server.post("/publish_films", new PublishFilmsHandler());
-    server.get("/film_details", new ShowPage("htmlFiles/film_details.html"));
-    //server.post("/film_details", new FilmDetailsHandler());
+    server.get("/film_details", new FilmDetailsHandler());
     server.run();
   } catch (Server::Exception e) {
     cerr << e.getMessage() << endl;
