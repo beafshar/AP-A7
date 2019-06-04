@@ -49,21 +49,20 @@ public:
 	void upload_films(Request *req,int id);
   std::string publisher_views_his_published_movies(Request *req,int id);
   int get_user_type(int id);
-	void view_movie_details(int film_id,int user_id);
+	std::string view_movie_details(int film_id,int user_id);
   std::string print_recommendation_films(int id,int user_id);
   std::string set_movie_details_body();
   std::string set_publisher_home_body();
   std::string set_user_home_body();
   std::string set_profile_body();
-  std::string user_views_available_movies(int id);
-  std::string user_views_bought_movies(int id);
-  /*
-	void comment_on_films(InputVec input);
-
+  std::string user_views_available_movies(Request *req,int id);
+  std::string user_views_bought_movies(Request *req,int id);
+	void comment_on_films(int user_id,int film_id,std::string content);
+/*
 	void buy_movie(InputVec input);
 
 	bool check_if_comment_existed(int film_id, int comment_id);
-	
+
   */
 
 private:

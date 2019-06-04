@@ -11,6 +11,18 @@
 #include <string>
 #include"Controller.h"
 
+class HomeHandler : public Controller {
+public:
+  Response *callback(Request *);
+};
+class FilterHandler : public Controller {
+public:
+  Response *callback(Request *);
+};
+class CommentHandler : public Controller {
+public:
+  Response *callback(Request *);
+};
 class UserHandler : public Controller {
 public:
   Response *callback(Request *);

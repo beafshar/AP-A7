@@ -1,9 +1,8 @@
 #include"UTflix.h"
 #include"Customer.h"
-// #include"BadRequest.h"
 #include"Publisher.h"
 #include"Movie.h"
-// #include"Message.h"
+#include"Message.h"
 // #include"NotFound.h"
 #include"Filter.h"
 #include"Recommender_System.h"
@@ -105,8 +104,8 @@ void UTflix::increase_user_money(std::string money_amount, int user_id) {
 	int money = std::stoi(money_amount);
 	UTflix_users[user_id]->increase_money(money);
 }
-/*
 
+/*
 Publisher* UTflix::find_publisher(int id) {
 	PublishersMap::iterator it;
 	for (it = publishers.begin(); it != publishers.end(); it++) {
@@ -115,32 +114,15 @@ Publisher* UTflix::find_publisher(int id) {
 	}
 	throw NotFound();
 }
-
-void UTflix::comment_on_films(InputVec input) {
-	int id = 0;
-	if(check_user_type() != ADMIN){
-		if (input.size() == COMMENTS_SIZE) {
-			if (check_int_validity(find_needed(input, "film_id")))
-				id = std::stoi(find_needed(input, "film_id"));
-			std::string content = find_needed(input, "content");
-			if (check_if_movie_existed(id)) {
-				if (movies[id - 1]->if_user_has_bought(active_user->get_id()) == true) {
-					active_user->comment_on_a_movie(id, content);
-					notify_user_has_submited_comment(movies[id - 1]->get_movie_name(), id);
-
-				}
-				else
-					throw PermissionDenied();
-			}
-			else
-				throw NotFound();
+*/
+void UTflix::comment_on_films(int user_id,int id,std::string content) {
+	if (check_if_movie_existed(id)) {
+		if (movies[id - 1]->if_user_has_bought(UTflix_users[user_id]
+      ->get_id()) == true)
+					UTflix_users[user_id]->comment_on_a_movie(id, content);
 		}
-	}
-	else
-		throw BadRequest();
 }
 
-*/
 
 void UTflix::rate_movie(std::string film_id, std::string rate, int user_id) {
 	int id = std::stoi(film_id);
@@ -149,17 +131,9 @@ void UTflix::rate_movie(std::string film_id, std::string rate, int user_id) {
 			if (movies[id - 1]->if_user_has_bought(user_id)== true)
 				UTflix_users[user_id]->score_movie(id, score);
 		}
-	// else
-	// 	throw NotFound();
-}
-/*
 
-bool UTflix::check_if_comment_existed(int film_id, int comment_id) {
-	if (check_if_movie_existed(film_id))
-		return movies[film_id - 1]->check_if_comment_exists(comment_id);
 }
 
-*/
 void UTflix::buy_movie(std::string film_id, int user_id) {
 	int id = std::stoi(film_id);
 	if (check_if_movie_existed(id)) {
@@ -169,5 +143,4 @@ void UTflix::buy_movie(std::string film_id, int user_id) {
 				return;
 			}
 		}
-		// throw NotFound();
 }

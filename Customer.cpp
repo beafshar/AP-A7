@@ -1,8 +1,7 @@
 #include"Customer.h"
-//#include"BadRequest.h"
 #include"Publisher.h"
 #include"Movie.h"
-//#include"Message.h"
+#include"Message.h"
 #include"Filter.h"
 #include"Recommender_System.h"
 
@@ -66,15 +65,11 @@ void Customer::increase_money(float _money) {
 }
 
 bool Customer::score_movie(int id, int rate) {
-	// if (rate > MAX_RATE || rate < MIN_RATE)
-	// 	throw BadRequest();
 	for (int i = 0; i < bought_movies.size(); i++) {
 		if (bought_movies[i]->get_film_id() == id &&
 			bought_movies[i]->if_deleted() == false) {
 			bought_movies[i]->score_movie(rate);
 		}
-		// else
-		// 	throw BadRequest();
 	}
 	return true;
 }
@@ -91,7 +86,7 @@ std::string Customer::hash_password(std::string password) {
 	password = str_hash(password);
 	return password;
 }
-/*
+
 bool Customer::comment_on_a_movie(int film_id, std::string content) {
 	for (int i = 0; i < bought_movies.size(); i++) {
 		if (bought_movies[i]->get_film_id() == film_id &&
@@ -100,11 +95,8 @@ bool Customer::comment_on_a_movie(int film_id, std::string content) {
 			return true;
 		}
 	}
-	throw BadRequest();
 }
 
-
-*/
 std::string Customer::get_username() {
 	return user_information["username"];
 }

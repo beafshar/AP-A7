@@ -1,6 +1,5 @@
 #include"Movie.h"
-//#include"BadRequest.h"
-//#include"Comment.h"
+#include"Comment.h"
 #include"Sale.h"
 //#include"NotFound.h"
 
@@ -33,7 +32,7 @@ void Movie::fill_movie_information(Request* req) {
 		InformationMAP::iterator it;
     for(it = movie_information.begin();it != movie_information.end(); it++)
       movie_information[it->first] = req->getBodyParam(it->first);
-      std::cout <<movie_information["name"]<<std::endl;
+      std::cout<<"****"<<movie_information["director"]<<"****"<<std::endl;
 }
 
 
@@ -60,30 +59,18 @@ void Movie::score_movie(float score) {
 	scores.push_back(score);
 	calculate_average_rate();
 }
-/*
+
 void Movie::submit_comment(std::string content, int user_id) {
 	Comment* comment = new Comment(comments.size() + 1, content, user_id, film_id);
 	comments.push_back(comment);
 }
-*/
+
 
 std::string Movie::get_movie_name() {;
 	return movie_information["name"];
 }
 
-/*
-void Movie::print_comments_and_replies() {
-	std::cout << "Comments" << std::endl;
-	for (int i = 0; i < comments.size(); i++) {
-		if (comments[i]->check_if_deleted() == false) {
-			std::cout << comments[i]->get_id() << ". " << comments[i]->get_content();
-			std::cout << std::endl;
-			comments[i]->print_replies();
-		}
-	}
-	std::cout << std::endl << std::endl;
-}
-*/
+
 float Movie::get_rate() {
 	return rate;
 }
@@ -137,14 +124,7 @@ bool Movie::compare_by_id(Movie* a, Movie* b) {
 bool Movie::compare_by_rate(Movie*a, Movie* b) {
 	return a->get_rate() > b->get_rate();
 }
-/*
-int Movie::get_comment_user(int comment_id) {
-	for (int i = 0; i < comments.size(); i++) {
-		if (comments[i]->get_id() == comment_id)
-			return comments[i]->get_user();
-	}
-}
-*/
+
 void Movie::add_weight() {
 	weight++;
 }

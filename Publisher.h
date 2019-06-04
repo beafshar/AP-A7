@@ -9,10 +9,10 @@ class Publisher :public Customer {
 public:
 	Publisher(int id);
 	virtual Movie* publish_films(Request* req, int id);
-  /*
+
 
 	virtual bool delete_film(int id);
-
+/*
 	static bool compare_by_id(Customer* a, Customer* b);
 	virtual bool if_follower_exists(int id);
 	virtual float publisher_get_paid();

@@ -36,7 +36,7 @@ public:
 	bool delete_comment(int id);
 	std::string get_movie_name();
 	std::string view_details();
-	void print_comments_and_replies();
+	std::string print_comments_and_replies();
 	int get_publisher_id();
 	bool if_deleted();
 	float get_rate();
@@ -54,6 +54,7 @@ public:
 	static bool compare_by_id(Movie* a, Movie* b);
 	static bool compare_by_rate(Movie* a, Movie* b);
 	static bool compare_by_weight(Movie* a, Movie* b);
+  std::string view_available_details();
 	//int get_comment_user(int comment_id);
 	void add_weight();
 	int get_weight();

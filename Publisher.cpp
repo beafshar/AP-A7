@@ -11,7 +11,7 @@ Movie* Publisher::publish_films(Request* req, int id) {
 	published_movies.push_back(film);
 	return film;
 }
-/*
+
 bool Publisher::delete_film(int id) {
 	for (int i = 0; i < published_movies.size(); i++) {
 		if (published_movies[i]->get_film_id() == id) {
@@ -21,7 +21,7 @@ bool Publisher::delete_film(int id) {
 	}
 //	throw PermissionDenied();
 }
-
+/*
 bool Publisher::compare_by_id(Customer* a, Customer* b) {
 	return a->get_id() < b->get_id();
 }

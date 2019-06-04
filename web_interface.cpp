@@ -1,9 +1,10 @@
 #include"Filter.h"
 #include"Movie.h"
-#include "UTflix.h"
+#include"UTflix.h"
 #include"Recommender_System.h"
 #include"Customer.h"
 #include"Publisher.h"
+#include"Comment.h"
 
 std::string UTflix::view_movie_details(int id,int user_id) {
 	int flag = 0;
@@ -13,16 +14,18 @@ std::string UTflix::view_movie_details(int id,int user_id) {
 			for (int i = 0; i < movies.size(); i++) {
 				if (movies[i]->get_film_id() == id &&movies[i]->if_deleted() == false) {
 					body += movies[i]->view_details();
+          body += "</table></div>"+ movies[i]->print_comments_and_replies();
 					break;
 				}
 			}
 		}
-  body +="</table>"+ print_recommendation_films(id,user_id);
+  body += print_recommendation_films(id,user_id);
   return body;
 }
 
 std::string UTflix::print_recommendation_films(int id,int user_id) {
-  std::string body = "";
+  std::string body =  "<div class=\"table2_div\"><table id=\"t01\">";
+  body += "<tr><th>Name</th><th>Lenght</th><th>Director</th></tr>";
 	MoviesMap top_movies = recommender->recommend_movies(id);
 	int count = 1;
 	for (int i = 0; count < TOP4; i++) {
@@ -59,17 +62,20 @@ std::string UTflix::set_movie_details_body(){
   body += "border-radius: 5px;display: inline-block;padding: 15px;margin : auto;}";
   body += ".profile_div{width: 10%;height: 50px;position:absolute;left:100px;";
   body += "top:400px;border-radius: 5px;display: inline-block;padding: 15px;margin : auto;}";
-  body +=".table1_div{width: 50%;height: 120px;position:absolute;right:100px;top:60px;";
+  body +=".table1_div{position:absolute;right:100px;top:60px;";
   body +="border-radius: 5px;display: inline-block;background-color: rgba(255, 220, 147,0.65);";
   body +="padding: 15px;margin : auto;}";
-  body +=".table2_div{width: 50%;height: 250px;position:absolute;right:140px;top:200px;";
+  body +=".table2_div{position:absolute;right:120px;top:300px;";
   body +="border-radius: 5px;display: inline-block;background-color: rgba(255, 220, 147,0.65);";
   body +="padding: 15px;margin : auto;}";
+  body += ".comments_div{position:absolute;right:550px;top:300px;";
+  body += "border-radius: 5px;display: inline-block;background-color: rgba(255, 220, 147,0.65);";
+  body += "padding: 15px;margin : auto;}";
   body +="table {width:100%;}table, th, td {border: 1px ;border-collapse: collapse;}";
   body +="th, td {padding: 15px;text-align: left;}table#t01 th {background-color: rgb(255, 220, 147);";
   body += "color: black} </style></head><body>";
   body +="<div class=\"logout_div\"><a href=\"/loggedout\">Logout</a></div>";
-  body +="<div class=\"profile_div\"><a href=\"/profile\">Profile</a></div>";
+  body +="<div class=\"profile_div\"><a href=\"/home\">Home</a></div>";
   body +="<div class=\"table1_div\"><table id=\"t01\"><tr>";
   body +="<th>Name</th><th>Rate</th><th>Price</th><th>Lenght</th><th>Year</th>";
   body +="<th>Director</th><th>Options</th></tr>";
@@ -81,26 +87,36 @@ std::string Movie::view_details() {
   body += "<tr><td><form action=\"/film_details\" method=\"get\">";
   body += "<button class=\"button\" name=\"film_id\"type=\"submit\"";
   body += "value="+ std::to_string(film_id)+ ">";
-  body += movie_information["name"] + "</a> </td>";
+  body += movie_information["name"] + "</button></form></td>";
   body += "<td>" + std::to_string(rate) + "</td>";
   body += "<td>" + movie_information["price"] + "</td>";
   body += "<td>" + movie_information["length"] + "</td>";
   body += "<td>" + movie_information["year"] + "</td>";
   body += "<td>" + movie_information["director"] + "</td>";
-  body += "<td><form action=\"/buy_movie\" method=\"get\"><a id=\"film\" href=\"/buy_movie\"></a>";
-  body += "<button class=\"button\" type=\"submit\"value=\"";
-  body += std::to_string(film_id)+"\">"+"Buy</button></td></form>";
-  body+= "</tr>"  ;
+  body += "<td><form action=\"/buy_movie\" method=\"get\">";
+  body += "<button class=\"button\" name=\"film_id\" type=\"submit\"value=";
+  body += std::to_string(film_id)+">"+"Buy</button></td></form>";
+  body += "</tr>"  ;
   return body;
+}
+
+std::string Movie::print_comments_and_replies() {
+  std::string body = "";
+  body+="<div class=\"comments_div\"><table id=\"t01\">";
+  body+="<tr> <th>Comments</th></tr>";
+	for (int i = 0; i < comments.size(); i++) {
+		if (comments[i]->check_if_deleted() == false)
+      body+="<tr><td>"+comments[i]->get_content()+"</td></tr>";
+	}
+  body+="</table></div>";
+	return body;
 }
 std::string Movie::print_recommendation() {
 	std::string body = "";
-  body += "<div class=\"table2_div\"> <table id=\"t01\">  <tr>";
-  body += "<th>Name</th>  <th>Lenght</th> <th>Director</th>  </tr>";
   body += "<tr><td><form action=\"/film_details\" method=\"get\">";
   body += "<button class=\"button\" name=\"film_id\"type=\"submit\"";
   body += "value="+ std::to_string(film_id)+ ">";
-  body += movie_information["name"] + "</a> </td>";
+  body += movie_information["name"] + "</button></form></td>";
   body += "<td>" + movie_information["length"] + "</td>";
   body += "<td>" + movie_information["director"] + "</td></tr>";
   return body;
@@ -108,9 +124,8 @@ std::string Movie::print_recommendation() {
 
 
 std::string UTflix::publisher_views_his_published_movies(Request *req,int id) {
+  std::string director = req->getQueryParam("filter_director");
   std::string body = set_publisher_home_body();
-  //std::string director = req->getBodyParam("director");
-  std::string director = "";
   std::string code = publishers[id]->get_published_movies(director);
   body += code;
   return body;
@@ -161,8 +176,8 @@ std::string UTflix::set_publisher_home_body(){
   body += "table#t01 th {background-color: rgb(61, 96, 56);color: white;}";
   body += "table#t01 td {color: white;}";
   body += "</style></head><body>";
-  body += "<div class=\"filter_div\"><form action=\"/filter_movies\" method=\"post\">";
-  body += "<input type=\"text\" name=\"director\" placeholder=\"Filter by director\">";
+  body += "<div class=\"filter_div\"><form action=\"/filter_movies\" method=\"get\">";
+  body += "<input type=\"text\" name=\"filter_director\" placeholder=\"Filter by director\">";
   body += "<button class=\"button\" type=\"submit\">Filter</button> <br></form>";
   body += "</div><div class=\"logout_div\"><a href=\"/loggedout\">Logout</a></div>";
   body += "<div class=\"films_div\"><a href=\"/publish_films\">Publish Films</a></div>";
@@ -176,17 +191,14 @@ std::string Publisher::get_published_movies(std::string director_name) {
 	int count = 1;
   std::string body = "";
 	Filter* filter = new Filter(director_name);
+  std::cout<<"************"<<director_name<<"****"<<std::endl;
 	for (int i = 0; i < published_movies.size(); i++) {
-		if (published_movies[i]->if_deleted() == false //&&
-  /*filter->filter_by_director(published_movies[i])*/) {
+		if (published_movies[i]->if_deleted() == false &&
+  filter->filter_by_director(published_movies[i]) == true) {
 			std::string code = published_movies[i]->view_published_details();
       body += code;
 			count++;
-      ////
-      std::cout<<published_movies[i]->get_movie_name()<<std::endl;
-      ////
 		}
-
 	}
   body += "</table></div></body></html>";
   return body;
@@ -198,31 +210,48 @@ std::string Movie::view_published_details() {
   body += "<tr><td><form action=\"/film_details\" method=\"get\">";
   body += "<button class=\"button\" name=\"film_id\"type=\"submit\"";
   body += "value="+ std::to_string(film_id)+ ">";
-  body += movie_information["name"] + "</a> </td>";
+  body += movie_information["name"] + "</button></form></td>";
   body += "<td>" + std::to_string(rate) + "</td>";
   body += "<td>" + movie_information["price"] + "</td>";
   body += "<td>" + movie_information["length"] + "</td>";
   body += "<td>" + movie_information["year"] + "</td>";
   body += "<td>" + movie_information["director"] + "</td>";
-  body += "<td><form action=\"/delete\" method=\"get\">";
+  body += "<td><form action=\"/delete_film\" method=\"get\">";
   body += "<button class=\"button\" name=\"film_id\"type=\"submit\"value=";
   body += std::to_string(film_id)+">"+"Delete</button></td></form>";
   body+= "</tr>";
   return body;
 }
 
-std::string UTflix::user_views_available_movies(int id){
+std::string UTflix::user_views_available_movies(Request *req,int id){
   std::string body = set_user_home_body();
   std::string director = "";
   Filter* filter = new Filter(director);
   for (int i = 0; i < movies.size(); i++) {
     if (movies[i]->if_deleted() == false && //filter->filter_by_director(movies[i]) &&
     movies[i]->get_price() <= UTflix_users[id]->get_money()){
-        std::string code = movies[i]->view_details();
+        std::string code = movies[i]->view_available_details();
         body += code;
     }
   }
   body += "</table></div></body></html>";
+  return body;
+}
+std::string Movie::view_available_details() {
+  std::string body = "";
+  body += "<tr><td><form action=\"/film_details\" method=\"get\">";
+  body += "<button class=\"button\" name=\"film_id\"type=\"submit\"";
+  body += "value="+ std::to_string(film_id)+ ">";
+  body += movie_information["name"] + "</button></form></td>";
+  body += "<td>" + std::to_string(rate) + "</td>";
+  body += "<td>" + movie_information["price"] + "</td>";
+  body += "<td>" + movie_information["length"] + "</td>";
+  body += "<td>" + movie_information["year"] + "</td>";
+  body += "<td>" + movie_information["director"] + "</td>";
+  body += "<td><form action=\"/buy_movie\" method=\"get\">";
+  body += "<button class=\"button\" name=\"film_id\" type=\"submit\"value=";
+  body += std::to_string(film_id)+">"+"Buy</button></td></form>";
+  body += "</tr>"  ;
   return body;
 }
 std::string UTflix::set_user_home_body(){
@@ -272,7 +301,7 @@ std::string UTflix::set_user_home_body(){
   body += "table#t01 td {color: white;}";
   body += "</style></head><body>";
   body += "<div class=\"filter_div\"><form action=\"/filter_movies\" method=\"post\">";
-  body += "<input type=\"text\" name=\"director\" placeholder=\"Filter by director\">";
+  body += "<input type=\"text\" name=\"filter_director\" placeholder=\"Filter by director\">";
   body += "<button class=\"button\" type=\"submit\">Filter</button> <br></form>";
   body += "</div><div class=\"logout_div\"><a href=\"/loggedout\">Logout</a></div>";
   body += "<div class=\"films_div\"><a href=\"/profile\">Profile</a></div>";
@@ -282,10 +311,9 @@ std::string UTflix::set_user_home_body(){
   return body;
 }
 
-std::string UTflix::user_views_bought_movies(int id) {
+std::string UTflix::user_views_bought_movies(Request *req,int id) {
   std::string body = set_profile_body();
-  //std::string director = req->getBodyParam("director");
-  std::string director = "";
+  std::string director = req->getQueryParam("director");
   std::string code = UTflix_users[id]->view_bought_movies(director);
   body += code;
   return body;
@@ -327,7 +355,7 @@ std::string UTflix::set_profile_body(){
   body += "background-size: 28px;background-position: 10px 10px;";
   body += "background-repeat: no-repeat;padding: 10px 10px 12px 40px;}";
   body += "input[type=text]#rate {width: 20%;border: 2px solid #ccc;border-radius: 2px;";
-  body += "font-size: 16px;background-color: white;padding: 2px 2px 5px 5px;}";
+  body += "font-size: 16px;background-color: white;padding: 2px 2px 5px 20px;}";
   body += ".filter_div {width: 18%;position:absolute;right:500px;";
   body += "top:30px;border-radius: 5px;display: inline-block;";
   body += "background-color: rgba(61, 96, 56,0.65);padding: 15px;";
@@ -337,7 +365,7 @@ std::string UTflix::set_profile_body(){
   body += "text-align: center;text-decoration: none;display: inline-block;";
   body += "font-size: 16px;margin: 4px 2px;cursor: pointer;}";
   body += ".button:hover {background-color: red;}";
-  body += ".button#rate {background-color: rgb(61, 96, 56);border: none;";
+  body += ".button#rate {background-color: rgb(61, 96, 56); width:50%;border: none;";
   body += "color: white;padding: 3px 15px;text-align: center;text-decoration: none;";
   body += "display: inline-block;font-size: 16px;margin: 4px 2px;cursor: pointer;}";
   body += ".button:hover#rate {background-color: red;}";
@@ -349,10 +377,10 @@ std::string UTflix::set_profile_body(){
   body += "width: 18%;height: 100px;position: absolute;right: 80px;";
   body += "top: 30px;border-radius: 5px;display: inline-block;";
   body += "background-color: rgba(61, 96, 56,0.65);padding: 15px;margin: auto;}";
-  body += ".table1_div{width: 50%;position:absolute;";
-  body += "right:50px;top:200px;border-radius: 5px;";
+  body += ".table1_div{width:55%;position:absolute;";
+  body += "right:30px;top:200px;border-radius: 5px;";
   body += "display: inline-block;background-color: rgba(61, 96, 56,0.65);";
-  body += "padding: 15px;margin : auto;}table {width:100%;}";
+  body += "padding: 15px;margin : auto;}table {}";
   body += "table, th, td {border: 1px ;border-collapse: collapse;}";
   body += "th, td {padding: 15px;text-align: left;}";
   body += "table#t01 th {background-color: rgb(61, 96, 56);color: white;}";
@@ -361,12 +389,12 @@ std::string UTflix::set_profile_body(){
   body += "<input type=\"text\" name=\"amount\" placeholder=\"Increase money\">";
   body += "<button class=\"button\" type=\"submit\">Charge</button> <br>";
   body += "</form></div><div class=\"filter_div\"><form action=\"/filter_movies\" method=\"get\">";
-  body += "<input type=\"text\" name=\"director\" placeholder=\"Filter by director\">";
+  body += "<input type=\"text\" name=\"filter_director\" placeholder=\"Filter by director\">";
   body += "<button class=\"button\" type=\"submit\">Filter</button> <br></form>";
   body += "</div><div class=\"logout_div\"><a href=\"/loggedout\">Logout</a></div>";
   body += "<div class=\"films_div\"><a href=\"/userhome\">Home</a></div>";
   body += "<div class=\"table1_div\"><table id=\"t01\"><tr>";
-  body += "<th>Name</th><th>Rate</th><th>Price</th><th>Lenght</th>";
+  body += "<th>Name</th><th>Rate</th><th>Price</th><th>Length</th>";
   body += "<th>Year</th><th>Director</th><th>Options</th></tr>";
   return body;
 }
@@ -377,15 +405,18 @@ std::string Movie::view_bought_details() {
   body += "<tr><td><form action=\"/film_details\" method=\"get\">";
   body += "<button class=\"button\" name=\"film_id\"type=\"submit\"";
   body += "value="+ std::to_string(film_id)+ ">";
-  body += movie_information["name"] + "</a> </td>";
+  body += movie_information["name"] + "</button></form></td>";
   body += "<td>" + std::to_string(rate) + "</td>";
   body += "<td>" + movie_information["price"] + "</td>";
   body += "<td>" + movie_information["length"] + "</td>";
   body += "<td>" + movie_information["year"] + "</td>";
   body += "<td>" + movie_information["director"] + "</td>";
   body += "<td><form action=\"/rate\" method=\"get\"><input id=\"rate\" type=\"text\" name=\"score\">";
-  body += "<button id=\"rate\" class=\"button\" type=\"submit\"value=\"";
-  body += std::to_string(film_id)+"\">"+"Rate</button></form></td>";
+  body += "<button id=\"rate\" class=\"button\" name =\"film_id\"type=\"submit\"value=";
+  body += std::to_string(film_id)+">"+"Rate</button></form></td>";
+  body += "<td><form action=\"/comment\" method=\"get\"><input id=\"rate\" type=\"text\" name=\"content\">";
+  body += "<button id=\"rate\" class=\"button\" name =\"film_id\"type=\"submit\"value=";
+  body += std::to_string(film_id)+">"+"Comment</button></form></td>";
   body+= "</tr>";
   return body;
 }

@@ -27,7 +27,6 @@ private:
 	int comment_id;
 	bool comment_deleted;
 	bool get_replied_by_publisher;
-	
-};
-#endif 
 
+};
+#endif

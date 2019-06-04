@@ -47,10 +47,7 @@ public:
 	bool score_movie(int id, int rate);
 	bool check_email_validity(std::string email);
 	std::string hash_password(std::string password);
-/*
 	bool comment_on_a_movie(int film_id, std::string content);
-
-  */
 	std::string get_username();
 	int get_type();
 	int get_id();
