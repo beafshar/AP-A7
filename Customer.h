@@ -56,13 +56,7 @@ public:
 	bool check_if_user_has_bought_movie(int id);
   virtual bool delete_film(int id) { return TEMP; };
   virtual Movie* publish_films(Request* req, int id) { return NULL; };
-  /*
-
-	virtual bool if_follower_exists(int id) { return TEMP; }
-	virtual void get_published_movies(InputVec input) {};
-  */
 	std::string view_bought_movies(std::string name);
-
 	void signup_admin(std::string username, std::string password);
 	void add_movies_weight(int id,RecommenderSystem* recommender);
 

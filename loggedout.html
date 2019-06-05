@@ -32,8 +32,33 @@
         width: 10%;
         height: 50px;
         position:absolute;
+        top:470px;
+        right:310px;
+        border-radius: 5px;
+        display: inline-block;
+        padding: 15px;
+        margin : auto;
+        font-size: 28px;
+    }
+    .msg_div{
+
+        width: 10%;
+        height: 50px;
+        position:absolute;
         right:230px;
-        top:230px;
+        top:280px;
+        border-radius: 5px;
+        display: inline-block;
+        padding: 15px;
+        margin : auto;
+        font-size: 28px;
+    }
+    .signup_div{
+        width: 10%;
+        height: 50px;
+        position:absolute;
+        right:160px;
+        top:470px;
         border-radius: 5px;
         display: inline-block;
         padding: 15px;
@@ -43,9 +68,14 @@
     </style>
 </head>
 <body>
-    <div class="logout_div">
+    <div class="msg_div">
         <p> Logout Successfully!</p> <br>
     </div>
-    <a style="float:right" href="/login_page"> login</a>
+    <div class="logout_div">
+    <a  href="/login_page"> Login</a>
+    </div>
+    <div class="signup_div">
+    <a  href="/signup_page"> Signup</a>
+    </div>
 </body>
 </html>

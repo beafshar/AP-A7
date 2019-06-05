@@ -36,20 +36,12 @@ Response *LogoutHandler::callback(Request *req) {
   return res;
 }
 Response *PublishFilmsHandler::callback(Request *req) {
-  if(req->getSessionId() == DEFAULT_SESSION_ID){
-    Response *res = Response::redirect("/error_page");
-    return res;
-  }
   int user_id = stoi(req->getSessionId());
   UT_flix->upload_films(req,user_id);
   Response *res = Response::redirect("/publisherhome");
   return res;
 }
 Response *DeleteFilmsHandler::callback(Request *req) {
-  if(req->getSessionId() == DEFAULT_SESSION_ID){
-    Response *res = Response::redirect("/error_page");
-    return res;
-  }
   string film_id = req->getQueryParam("film_id");
   int user_id = stoi(req->getSessionId());
   UT_flix->delete_movie(film_id, user_id);
@@ -57,10 +49,6 @@ Response *DeleteFilmsHandler::callback(Request *req) {
   return res;
 }
 Response *RateFilmHandler::callback(Request *req) {
-  if(req->getSessionId() == DEFAULT_SESSION_ID){
-    Response *res = Response::redirect("/error_page");
-    return res;
-  }
   string film_id = req->getQueryParam("film_id");
   string score = req->getQueryParam("score");
   int user_id = stoi(req->getSessionId());
@@ -69,10 +57,6 @@ Response *RateFilmHandler::callback(Request *req) {
   return res;
 }
 Response *BuyFilmHandler::callback(Request *req) {
-  if(req->getSessionId() == DEFAULT_SESSION_ID){
-    Response *res = Response::redirect("/error_page");
-    return res;
-  }
   string film_id = req->getQueryParam("film_id");
   int user_id = stoi(req->getSessionId());
   UT_flix->buy_movie(film_id, user_id);
@@ -80,10 +64,6 @@ Response *BuyFilmHandler::callback(Request *req) {
   return res;
 }
 Response *FilmDetailsHandler::callback(Request *req) {
-  if(req->getSessionId() == DEFAULT_SESSION_ID){
-    Response *res = Response::redirect("/error_page");
-    return res;
-  }
   int film_id = stoi(req->getQueryParam("film_id"));
   int user_id = stoi(req->getSessionId());
   Response *res = new Response;
@@ -93,10 +73,6 @@ Response *FilmDetailsHandler::callback(Request *req) {
 
 }
 Response *IncreaseMoneyHandler::callback(Request *req) {
-  if(req->getSessionId() == DEFAULT_SESSION_ID){
-    Response *res = Response::redirect("/error_page");
-    return res;
-  }
   std::string amount = req->getQueryParam("amount");
   int user_id = stoi(req->getSessionId());
   UT_flix->increase_user_money(amount, user_id);
@@ -105,10 +81,6 @@ Response *IncreaseMoneyHandler::callback(Request *req) {
 }
 
 Response *PublisherHandler::callback(Request *req) {
-  if(req->getSessionId() == DEFAULT_SESSION_ID){
-    Response *res = Response::redirect("/error_page");
-    return res;
-  }
   int user_id = stoi(req->getSessionId());
   Response *res = new Response();
   res->setHeader("Content-Type","text/html");
@@ -116,10 +88,6 @@ Response *PublisherHandler::callback(Request *req) {
   return res;
 }
 Response *UserHandler::callback(Request *req) {
-  if(req->getSessionId() == DEFAULT_SESSION_ID){
-    Response *res = Response::redirect("/error_page");
-    return res;
-  }
   int user_id = stoi(req->getSessionId());
   Response *res = new Response();
   res->setHeader("Content-Type","text/html");
@@ -127,10 +95,6 @@ Response *UserHandler::callback(Request *req) {
   return res;
 }
 Response *ProfileHandler::callback(Request *req) {
-  if(req->getSessionId() == DEFAULT_SESSION_ID){
-    Response *res = Response::redirect("/error_page");
-    return res;
-  }
   int user_id = stoi(req->getSessionId());
   Response *res = new Response();
   res->setHeader("Content-Type","text/html");
@@ -138,10 +102,6 @@ Response *ProfileHandler::callback(Request *req) {
   return res;
 }
 Response *CommentHandler::callback(Request *req) {
-  if(req->getSessionId() == DEFAULT_SESSION_ID){
-    Response *res = Response::redirect("/error_page");
-    return res;
-  }
   int film_id = stoi(req->getQueryParam("film_id"));
   string content = req->getQueryParam("content");
   int user_id = stoi(req->getSessionId());
@@ -151,10 +111,6 @@ Response *CommentHandler::callback(Request *req) {
 }
 
 Response *FilterHandler::callback(Request *req) {
-  if(req->getSessionId() == DEFAULT_SESSION_ID){
-    Response *res = Response::redirect("/error_page");
-    return res;
-  }
   Response *res = Response::redirect("/home");
   return res;
 }

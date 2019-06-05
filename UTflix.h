@@ -58,12 +58,6 @@ public:
   std::string user_views_available_movies(Request *req,int id);
   std::string user_views_bought_movies(Request *req,int id);
 	void comment_on_films(int user_id,int film_id,std::string content);
-/*
-	void buy_movie(InputVec input);
-
-	bool check_if_comment_existed(int film_id, int comment_id);
-
-  */
 
 private:
 	CustomersMap UTflix_users;

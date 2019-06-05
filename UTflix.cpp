@@ -95,8 +95,6 @@ void UTflix::delete_movie(std::string film_id, int user_id) {
 			if (check_if_movie_existed(id)) {
 				publishers[user_id]->delete_film(id);
 			}
-			// else
-			// 	throw NotFound();
 		}
 }
 
@@ -105,16 +103,6 @@ void UTflix::increase_user_money(std::string money_amount, int user_id) {
 	UTflix_users[user_id]->increase_money(money);
 }
 
-/*
-Publisher* UTflix::find_publisher(int id) {
-	PublishersMap::iterator it;
-	for (it = publishers.begin(); it != publishers.end(); it++) {
-		if (it->first == id)
-			return it->second;
-	}
-	throw NotFound();
-}
-*/
 void UTflix::comment_on_films(int user_id,int id,std::string content) {
 	if (check_if_movie_existed(id)) {
 		if (movies[id - 1]->if_user_has_bought(UTflix_users[user_id]
