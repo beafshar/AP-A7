@@ -59,6 +59,7 @@ public:
 	std::string view_bought_movies(std::string name);
 	void signup_admin(std::string username, std::string password);
 	void add_movies_weight(int id,RecommenderSystem* recommender);
+  bool check_passwords(Request *req);
 
 protected:
 	InformationMAP user_information;

@@ -4,6 +4,7 @@
 #include"Message.h"
 #include"Filter.h"
 #include"Recommender_System.h"
+#include"BadRequest.h"
 
 
 
@@ -33,17 +34,24 @@ bool Customer::signup(Request *req) {
       user_information[it->first] = req->getBodyParam(it->first);
 		set_user_type();
 		user_information["password"] = hash_password(user_information["password"]);
-    if(check_email_validity(user_information["email"]))
+    if(check_email_validity(user_information["email"]) && check_passwords(req))
       return true;
-	return false;
+	throw BadRequest();
 }
 
+bool Customer::check_passwords(Request *req){
+  std::string repeat_pass = req->getBodyParam("r_password");
+  std::string pass = req->getBodyParam("password");
+  if(pass.compare(repeat_pass)==0)
+    return true;
+  return false;
+}
 bool Customer::login(std::string username, std::string password) {
   std::string pass = hash_password(password);
-  if(username.compare(user_information["username"]) != 0 &&
-    pass.compare(user_information["password"]) != 0)
+  if(username.compare(user_information["username"]) == 0 &&
+    pass.compare(user_information["password"]) == 0)
     return true;
-	return false;
+  return false;
 }
 
 void Customer::set_user_type() {

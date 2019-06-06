@@ -3,9 +3,9 @@
 #include"Publisher.h"
 #include"Movie.h"
 #include"Message.h"
-// #include"NotFound.h"
 #include"Filter.h"
 #include"Recommender_System.h"
+#include"BadRequest.h"
 
 UTflix* UTflix::instance = 0;
 
@@ -31,6 +31,7 @@ int UTflix::login(std::string username, std::string password) {
 			return it->first;
 		}
 	}
+  throw BadRequest();
 }
 
 int UTflix::get_user_type(int id){
@@ -46,7 +47,6 @@ int UTflix::signup(Request *req) {
 				return user->get_id();
 			}
 		}
-//	throw BadRequest();
 }
 
 void UTflix::add_publishers(Customer* user, Request *req) {
@@ -77,8 +77,12 @@ int UTflix::check_user_type(int id) {
 }
 
 void UTflix::upload_films(Request *req,int id) {
+  if(check_user_type(id) == USER_PUBLISHER){
 	movies.push_back(publishers[id]->publish_films(req, movies.size()+1));
 	recommender->expand_matrix();
+  }
+  else
+    throw BadRequest();
 }
 
 bool UTflix::check_if_movie_existed(int id) {
@@ -92,43 +96,53 @@ bool UTflix::check_if_movie_existed(int id) {
 void UTflix::delete_movie(std::string film_id, int user_id) {
 	int id = std::stoi(film_id);
 	if (check_user_type(user_id) == USER_PUBLISHER) {
-			if (check_if_movie_existed(id)) {
+			if (check_if_movie_existed(id))
 				publishers[user_id]->delete_film(id);
-			}
 		}
+  else
+    throw BadRequest();
 }
 
 void UTflix::increase_user_money(std::string money_amount, int user_id) {
-	int money = std::stoi(money_amount);
-	UTflix_users[user_id]->increase_money(money);
+  if(check_user_type(user_id) == USER_CUSTOMER){
+	  int money = std::stoi(money_amount);
+	  UTflix_users[user_id]->increase_money(money);
+    }
+  else
+    throw BadRequest();
 }
 
 void UTflix::comment_on_films(int user_id,int id,std::string content) {
-	if (check_if_movie_existed(id)) {
+	if (check_if_movie_existed(id) && check_user_type(user_id) == USER_CUSTOMER) {
 		if (movies[id - 1]->if_user_has_bought(UTflix_users[user_id]
       ->get_id()) == true)
 					UTflix_users[user_id]->comment_on_a_movie(id, content);
 		}
+  else
+    throw BadRequest();
 }
 
 
 void UTflix::rate_movie(std::string film_id, std::string rate, int user_id) {
 	int id = std::stoi(film_id);
   float score = std::stof(rate);
-	if (check_if_movie_existed(id)) {
+	if (check_if_movie_existed(id) && check_user_type(user_id) == USER_CUSTOMER) {
 			if (movies[id - 1]->if_user_has_bought(user_id)== true)
 				UTflix_users[user_id]->score_movie(id, score);
 		}
-
+  else
+    throw BadRequest();
 }
 
 void UTflix::buy_movie(std::string film_id, int user_id) {
 	int id = std::stoi(film_id);
-	if (check_if_movie_existed(id)) {
+	if (check_if_movie_existed(id) && check_user_type(user_id) == USER_CUSTOMER) {
 		if (movies[id -1]->if_user_has_bought(user_id) == false &&
 				UTflix_users[user_id]->buy_movie(movies[id-1],recommender)) {
 				net_money += movies[id - 1]->buy_movie(UTflix_users[user_id]->get_id());
 				return;
 			}
 		}
+  else
+    throw BadRequest();
 }
